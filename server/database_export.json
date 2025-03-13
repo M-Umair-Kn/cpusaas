@@ -1,0 +1,2363 @@
+{
+  "users": [
+    {
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "email": "abcd@efg.com",
+      "password_hash": "$2b$10$jMX/KRrk0k1tcqxwnfLWf.UVe3C6zu9YfyFCzrEfliNQ43Dohh/vm",
+      "registration_date": "2025-03-13T15:46:20.739Z"
+    }
+  ],
+  "processSets": [
+    {
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "name": "testProcessSet01",
+      "created_date": "2025-03-13T15:55:36.380Z"
+    }
+  ],
+  "processes": [
+    {
+      "process_id": "6d44fa74-129a-4f48-a3bb-892472596a34",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "pid": "1",
+      "arrival_time": 0,
+      "burst_time": 80,
+      "priority": null
+    },
+    {
+      "process_id": "006c81c0-1adb-47c6-8110-5f58399b3d16",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "pid": "2",
+      "arrival_time": 20,
+      "burst_time": 60,
+      "priority": null
+    },
+    {
+      "process_id": "e0069ba7-a1be-49ea-9a8c-0378a32a6be9",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "pid": "3",
+      "arrival_time": 40,
+      "burst_time": 65,
+      "priority": null
+    },
+    {
+      "process_id": "2bef596c-6ad1-4d28-93f6-ed48ee538bfe",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "pid": "4",
+      "arrival_time": 60,
+      "burst_time": 120,
+      "priority": null
+    },
+    {
+      "process_id": "ea6a7008-d712-40d8-b286-0abc07af2492",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "pid": "5",
+      "arrival_time": 80,
+      "burst_time": 30,
+      "priority": null
+    },
+    {
+      "process_id": "770e5cb5-6ba3-4ee9-b1d6-16714b994fb7",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "pid": "6",
+      "arrival_time": 90,
+      "burst_time": 90,
+      "priority": null
+    },
+    {
+      "process_id": "935c7fc1-bbf0-4733-9051-e54d2a02fb74",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "pid": "7",
+      "arrival_time": 120,
+      "burst_time": 25,
+      "priority": null
+    },
+    {
+      "process_id": "a7eb119c-d834-4dfa-becd-0d030a9ef817",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "pid": "8",
+      "arrival_time": 240,
+      "burst_time": 40,
+      "priority": null
+    },
+    {
+      "process_id": "79c44bc6-8c9d-40d6-9517-70f889b0fabc",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "pid": "9",
+      "arrival_time": 260,
+      "burst_time": 90,
+      "priority": null
+    },
+    {
+      "process_id": "307ce5d2-9725-4b51-827e-211a8b9a2c58",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "pid": "10",
+      "arrival_time": 380,
+      "burst_time": 75,
+      "priority": null
+    }
+  ],
+  "simulations": [
+    {
+      "simulation_id": "9772ef93-bc8d-42b9-a30a-23181b322e10",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "3",
+          "start": 140,
+          "end": 205
+        },
+        {
+          "pid": "4",
+          "start": 205,
+          "end": 325
+        },
+        {
+          "pid": "5",
+          "start": 325,
+          "end": 355
+        },
+        {
+          "pid": "6",
+          "start": 355,
+          "end": 445
+        },
+        {
+          "pid": "7",
+          "start": 445,
+          "end": 470
+        },
+        {
+          "pid": "8",
+          "start": 470,
+          "end": 510
+        },
+        {
+          "pid": "9",
+          "start": 510,
+          "end": 600
+        },
+        {
+          "pid": "10",
+          "start": 600,
+          "end": 675
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 184,
+        "averageTurnaroundTime": 251.5,
+        "averageResponseTime": 184,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "3": {
+            "waitingTime": 100,
+            "turnaroundTime": 165,
+            "responseTime": 100
+          },
+          "4": {
+            "waitingTime": 145,
+            "turnaroundTime": 265,
+            "responseTime": 145
+          },
+          "5": {
+            "waitingTime": 245,
+            "turnaroundTime": 275,
+            "responseTime": 245
+          },
+          "6": {
+            "waitingTime": 265,
+            "turnaroundTime": 355,
+            "responseTime": 265
+          },
+          "7": {
+            "waitingTime": 325,
+            "turnaroundTime": 350,
+            "responseTime": 325
+          },
+          "8": {
+            "waitingTime": 230,
+            "turnaroundTime": 270,
+            "responseTime": 230
+          },
+          "9": {
+            "waitingTime": 250,
+            "turnaroundTime": 340,
+            "responseTime": 250
+          },
+          "10": {
+            "waitingTime": 220,
+            "turnaroundTime": 295,
+            "responseTime": 220
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "26ec09c9-782b-4cca-b5fb-5278bf3f6d36",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "3",
+          "start": 140,
+          "end": 205
+        },
+        {
+          "pid": "4",
+          "start": 205,
+          "end": 325
+        },
+        {
+          "pid": "5",
+          "start": 325,
+          "end": 355
+        },
+        {
+          "pid": "6",
+          "start": 355,
+          "end": 445
+        },
+        {
+          "pid": "7",
+          "start": 445,
+          "end": 470
+        },
+        {
+          "pid": "8",
+          "start": 470,
+          "end": 510
+        },
+        {
+          "pid": "9",
+          "start": 510,
+          "end": 600
+        },
+        {
+          "pid": "10",
+          "start": 600,
+          "end": 675
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 184,
+        "averageTurnaroundTime": 251.5,
+        "averageResponseTime": 184,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "3": {
+            "waitingTime": 100,
+            "turnaroundTime": 165,
+            "responseTime": 100
+          },
+          "4": {
+            "waitingTime": 145,
+            "turnaroundTime": 265,
+            "responseTime": 145
+          },
+          "5": {
+            "waitingTime": 245,
+            "turnaroundTime": 275,
+            "responseTime": 245
+          },
+          "6": {
+            "waitingTime": 265,
+            "turnaroundTime": 355,
+            "responseTime": 265
+          },
+          "7": {
+            "waitingTime": 325,
+            "turnaroundTime": 350,
+            "responseTime": 325
+          },
+          "8": {
+            "waitingTime": 230,
+            "turnaroundTime": 270,
+            "responseTime": 230
+          },
+          "9": {
+            "waitingTime": 250,
+            "turnaroundTime": 340,
+            "responseTime": 250
+          },
+          "10": {
+            "waitingTime": 220,
+            "turnaroundTime": 295,
+            "responseTime": 220
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "359b706c-a818-46c1-a238-04ae435c28f0",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "3",
+          "start": 140,
+          "end": 205
+        },
+        {
+          "pid": "4",
+          "start": 205,
+          "end": 325
+        },
+        {
+          "pid": "5",
+          "start": 325,
+          "end": 355
+        },
+        {
+          "pid": "6",
+          "start": 355,
+          "end": 445
+        },
+        {
+          "pid": "7",
+          "start": 445,
+          "end": 470
+        },
+        {
+          "pid": "8",
+          "start": 470,
+          "end": 510
+        },
+        {
+          "pid": "9",
+          "start": 510,
+          "end": 600
+        },
+        {
+          "pid": "10",
+          "start": 600,
+          "end": 675
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 184,
+        "averageTurnaroundTime": 251.5,
+        "averageResponseTime": 184,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "3": {
+            "waitingTime": 100,
+            "turnaroundTime": 165,
+            "responseTime": 100
+          },
+          "4": {
+            "waitingTime": 145,
+            "turnaroundTime": 265,
+            "responseTime": 145
+          },
+          "5": {
+            "waitingTime": 245,
+            "turnaroundTime": 275,
+            "responseTime": 245
+          },
+          "6": {
+            "waitingTime": 265,
+            "turnaroundTime": 355,
+            "responseTime": 265
+          },
+          "7": {
+            "waitingTime": 325,
+            "turnaroundTime": 350,
+            "responseTime": 325
+          },
+          "8": {
+            "waitingTime": 230,
+            "turnaroundTime": 270,
+            "responseTime": 230
+          },
+          "9": {
+            "waitingTime": 250,
+            "turnaroundTime": 340,
+            "responseTime": 250
+          },
+          "10": {
+            "waitingTime": 220,
+            "turnaroundTime": 295,
+            "responseTime": 220
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "40ea256a-64fe-4f4c-838c-df0b8b9644ab",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "3",
+          "start": 140,
+          "end": 205
+        },
+        {
+          "pid": "4",
+          "start": 205,
+          "end": 325
+        },
+        {
+          "pid": "5",
+          "start": 325,
+          "end": 355
+        },
+        {
+          "pid": "6",
+          "start": 355,
+          "end": 445
+        },
+        {
+          "pid": "7",
+          "start": 445,
+          "end": 470
+        },
+        {
+          "pid": "8",
+          "start": 470,
+          "end": 510
+        },
+        {
+          "pid": "9",
+          "start": 510,
+          "end": 600
+        },
+        {
+          "pid": "10",
+          "start": 600,
+          "end": 675
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 184,
+        "averageTurnaroundTime": 251.5,
+        "averageResponseTime": 184,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "3": {
+            "waitingTime": 100,
+            "turnaroundTime": 165,
+            "responseTime": 100
+          },
+          "4": {
+            "waitingTime": 145,
+            "turnaroundTime": 265,
+            "responseTime": 145
+          },
+          "5": {
+            "waitingTime": 245,
+            "turnaroundTime": 275,
+            "responseTime": 245
+          },
+          "6": {
+            "waitingTime": 265,
+            "turnaroundTime": 355,
+            "responseTime": 265
+          },
+          "7": {
+            "waitingTime": 325,
+            "turnaroundTime": 350,
+            "responseTime": 325
+          },
+          "8": {
+            "waitingTime": 230,
+            "turnaroundTime": 270,
+            "responseTime": 230
+          },
+          "9": {
+            "waitingTime": 250,
+            "turnaroundTime": 340,
+            "responseTime": 250
+          },
+          "10": {
+            "waitingTime": 220,
+            "turnaroundTime": 295,
+            "responseTime": 220
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "662cf142-99a4-458e-872d-cfdf66b41382",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "3",
+          "start": 140,
+          "end": 205
+        },
+        {
+          "pid": "4",
+          "start": 205,
+          "end": 325
+        },
+        {
+          "pid": "5",
+          "start": 325,
+          "end": 355
+        },
+        {
+          "pid": "6",
+          "start": 355,
+          "end": 445
+        },
+        {
+          "pid": "7",
+          "start": 445,
+          "end": 470
+        },
+        {
+          "pid": "8",
+          "start": 470,
+          "end": 510
+        },
+        {
+          "pid": "9",
+          "start": 510,
+          "end": 600
+        },
+        {
+          "pid": "10",
+          "start": 600,
+          "end": 675
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 184,
+        "averageTurnaroundTime": 251.5,
+        "averageResponseTime": 184,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "3": {
+            "waitingTime": 100,
+            "turnaroundTime": 165,
+            "responseTime": 100
+          },
+          "4": {
+            "waitingTime": 145,
+            "turnaroundTime": 265,
+            "responseTime": 145
+          },
+          "5": {
+            "waitingTime": 245,
+            "turnaroundTime": 275,
+            "responseTime": 245
+          },
+          "6": {
+            "waitingTime": 265,
+            "turnaroundTime": 355,
+            "responseTime": 265
+          },
+          "7": {
+            "waitingTime": 325,
+            "turnaroundTime": 350,
+            "responseTime": 325
+          },
+          "8": {
+            "waitingTime": 230,
+            "turnaroundTime": 270,
+            "responseTime": 230
+          },
+          "9": {
+            "waitingTime": 250,
+            "turnaroundTime": 340,
+            "responseTime": 250
+          },
+          "10": {
+            "waitingTime": 220,
+            "turnaroundTime": 295,
+            "responseTime": 220
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "55474d16-3ac6-42bc-88c7-0e67279f8903",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "3",
+          "start": 140,
+          "end": 205
+        },
+        {
+          "pid": "4",
+          "start": 205,
+          "end": 325
+        },
+        {
+          "pid": "5",
+          "start": 325,
+          "end": 355
+        },
+        {
+          "pid": "6",
+          "start": 355,
+          "end": 445
+        },
+        {
+          "pid": "7",
+          "start": 445,
+          "end": 470
+        },
+        {
+          "pid": "8",
+          "start": 470,
+          "end": 510
+        },
+        {
+          "pid": "9",
+          "start": 510,
+          "end": 600
+        },
+        {
+          "pid": "10",
+          "start": 600,
+          "end": 675
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 184,
+        "averageTurnaroundTime": 251.5,
+        "averageResponseTime": 184,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "3": {
+            "waitingTime": 100,
+            "turnaroundTime": 165,
+            "responseTime": 100
+          },
+          "4": {
+            "waitingTime": 145,
+            "turnaroundTime": 265,
+            "responseTime": 145
+          },
+          "5": {
+            "waitingTime": 245,
+            "turnaroundTime": 275,
+            "responseTime": 245
+          },
+          "6": {
+            "waitingTime": 265,
+            "turnaroundTime": 355,
+            "responseTime": 265
+          },
+          "7": {
+            "waitingTime": 325,
+            "turnaroundTime": 350,
+            "responseTime": 325
+          },
+          "8": {
+            "waitingTime": 230,
+            "turnaroundTime": 270,
+            "responseTime": 230
+          },
+          "9": {
+            "waitingTime": 250,
+            "turnaroundTime": 340,
+            "responseTime": 250
+          },
+          "10": {
+            "waitingTime": 220,
+            "turnaroundTime": 295,
+            "responseTime": 220
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "39491c62-1b24-4fb3-9062-2576b752cb71",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "3",
+          "start": 140,
+          "end": 205
+        },
+        {
+          "pid": "4",
+          "start": 205,
+          "end": 325
+        },
+        {
+          "pid": "5",
+          "start": 325,
+          "end": 355
+        },
+        {
+          "pid": "6",
+          "start": 355,
+          "end": 445
+        },
+        {
+          "pid": "7",
+          "start": 445,
+          "end": 470
+        },
+        {
+          "pid": "8",
+          "start": 470,
+          "end": 510
+        },
+        {
+          "pid": "9",
+          "start": 510,
+          "end": 600
+        },
+        {
+          "pid": "10",
+          "start": 600,
+          "end": 675
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 184,
+        "averageTurnaroundTime": 251.5,
+        "averageResponseTime": 184,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "3": {
+            "waitingTime": 100,
+            "turnaroundTime": 165,
+            "responseTime": 100
+          },
+          "4": {
+            "waitingTime": 145,
+            "turnaroundTime": 265,
+            "responseTime": 145
+          },
+          "5": {
+            "waitingTime": 245,
+            "turnaroundTime": 275,
+            "responseTime": 245
+          },
+          "6": {
+            "waitingTime": 265,
+            "turnaroundTime": 355,
+            "responseTime": 265
+          },
+          "7": {
+            "waitingTime": 325,
+            "turnaroundTime": 350,
+            "responseTime": 325
+          },
+          "8": {
+            "waitingTime": 230,
+            "turnaroundTime": 270,
+            "responseTime": 230
+          },
+          "9": {
+            "waitingTime": 250,
+            "turnaroundTime": 340,
+            "responseTime": 250
+          },
+          "10": {
+            "waitingTime": 220,
+            "turnaroundTime": 295,
+            "responseTime": 220
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "95fe3410-bd6c-4b49-9b3f-0ef551e4f8c5",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "3",
+          "start": 140,
+          "end": 205
+        },
+        {
+          "pid": "4",
+          "start": 205,
+          "end": 325
+        },
+        {
+          "pid": "5",
+          "start": 325,
+          "end": 355
+        },
+        {
+          "pid": "6",
+          "start": 355,
+          "end": 445
+        },
+        {
+          "pid": "7",
+          "start": 445,
+          "end": 470
+        },
+        {
+          "pid": "8",
+          "start": 470,
+          "end": 510
+        },
+        {
+          "pid": "9",
+          "start": 510,
+          "end": 600
+        },
+        {
+          "pid": "10",
+          "start": 600,
+          "end": 675
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 184,
+        "averageTurnaroundTime": 251.5,
+        "averageResponseTime": 184,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "3": {
+            "waitingTime": 100,
+            "turnaroundTime": 165,
+            "responseTime": 100
+          },
+          "4": {
+            "waitingTime": 145,
+            "turnaroundTime": 265,
+            "responseTime": 145
+          },
+          "5": {
+            "waitingTime": 245,
+            "turnaroundTime": 275,
+            "responseTime": 245
+          },
+          "6": {
+            "waitingTime": 265,
+            "turnaroundTime": 355,
+            "responseTime": 265
+          },
+          "7": {
+            "waitingTime": 325,
+            "turnaroundTime": 350,
+            "responseTime": 325
+          },
+          "8": {
+            "waitingTime": 230,
+            "turnaroundTime": 270,
+            "responseTime": 230
+          },
+          "9": {
+            "waitingTime": 250,
+            "turnaroundTime": 340,
+            "responseTime": 250
+          },
+          "10": {
+            "waitingTime": 220,
+            "turnaroundTime": 295,
+            "responseTime": 220
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "346776a7-289f-41f3-b7c5-1e2bf9008e04",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "5",
+          "start": 80,
+          "end": 110
+        },
+        {
+          "pid": "6",
+          "start": 110,
+          "end": 200
+        },
+        {
+          "pid": "7",
+          "start": 200,
+          "end": 225
+        },
+        {
+          "pid": "8",
+          "start": 240,
+          "end": 280
+        },
+        {
+          "pid": "9",
+          "start": 280,
+          "end": 370
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 20,
+        "averageTurnaroundTime": 79.16666666666667,
+        "averageResponseTime": 20,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "5": {
+            "waitingTime": 0,
+            "turnaroundTime": 30,
+            "responseTime": 0
+          },
+          "6": {
+            "waitingTime": 20,
+            "turnaroundTime": 110,
+            "responseTime": 20
+          },
+          "7": {
+            "waitingTime": 80,
+            "turnaroundTime": 105,
+            "responseTime": 80
+          },
+          "8": {
+            "waitingTime": 0,
+            "turnaroundTime": 40,
+            "responseTime": 0
+          },
+          "9": {
+            "waitingTime": 20,
+            "turnaroundTime": 110,
+            "responseTime": 20
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "5dec9584-973d-4905-a853-6d6025876495",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "3",
+          "start": 140,
+          "end": 205
+        },
+        {
+          "pid": "4",
+          "start": 205,
+          "end": 325
+        },
+        {
+          "pid": "5",
+          "start": 325,
+          "end": 355
+        },
+        {
+          "pid": "6",
+          "start": 355,
+          "end": 445
+        },
+        {
+          "pid": "7",
+          "start": 445,
+          "end": 470
+        },
+        {
+          "pid": "8",
+          "start": 470,
+          "end": 510
+        },
+        {
+          "pid": "9",
+          "start": 510,
+          "end": 600
+        },
+        {
+          "pid": "10",
+          "start": 600,
+          "end": 675
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 184,
+        "averageTurnaroundTime": 251.5,
+        "averageResponseTime": 184,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "3": {
+            "waitingTime": 100,
+            "turnaroundTime": 165,
+            "responseTime": 100
+          },
+          "4": {
+            "waitingTime": 145,
+            "turnaroundTime": 265,
+            "responseTime": 145
+          },
+          "5": {
+            "waitingTime": 245,
+            "turnaroundTime": 275,
+            "responseTime": 245
+          },
+          "6": {
+            "waitingTime": 265,
+            "turnaroundTime": 355,
+            "responseTime": 265
+          },
+          "7": {
+            "waitingTime": 325,
+            "turnaroundTime": 350,
+            "responseTime": 325
+          },
+          "8": {
+            "waitingTime": 230,
+            "turnaroundTime": 270,
+            "responseTime": 230
+          },
+          "9": {
+            "waitingTime": 250,
+            "turnaroundTime": 340,
+            "responseTime": 250
+          },
+          "10": {
+            "waitingTime": 220,
+            "turnaroundTime": 295,
+            "responseTime": 220
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "7bafe7ca-bada-4a70-a4d4-eb070f5706b3",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "3",
+          "start": 140,
+          "end": 205
+        },
+        {
+          "pid": "4",
+          "start": 205,
+          "end": 325
+        },
+        {
+          "pid": "5",
+          "start": 325,
+          "end": 355
+        },
+        {
+          "pid": "6",
+          "start": 355,
+          "end": 445
+        },
+        {
+          "pid": "7",
+          "start": 445,
+          "end": 470
+        },
+        {
+          "pid": "8",
+          "start": 470,
+          "end": 510
+        },
+        {
+          "pid": "9",
+          "start": 510,
+          "end": 600
+        },
+        {
+          "pid": "10",
+          "start": 600,
+          "end": 675
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 184,
+        "averageTurnaroundTime": 251.5,
+        "averageResponseTime": 184,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "3": {
+            "waitingTime": 100,
+            "turnaroundTime": 165,
+            "responseTime": 100
+          },
+          "4": {
+            "waitingTime": 145,
+            "turnaroundTime": 265,
+            "responseTime": 145
+          },
+          "5": {
+            "waitingTime": 245,
+            "turnaroundTime": 275,
+            "responseTime": 245
+          },
+          "6": {
+            "waitingTime": 265,
+            "turnaroundTime": 355,
+            "responseTime": 265
+          },
+          "7": {
+            "waitingTime": 325,
+            "turnaroundTime": 350,
+            "responseTime": 325
+          },
+          "8": {
+            "waitingTime": 230,
+            "turnaroundTime": 270,
+            "responseTime": 230
+          },
+          "9": {
+            "waitingTime": 250,
+            "turnaroundTime": 340,
+            "responseTime": 250
+          },
+          "10": {
+            "waitingTime": 220,
+            "turnaroundTime": 295,
+            "responseTime": 220
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "3e1d900f-e0ef-4130-b04e-fbe130479ae8",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "3",
+          "start": 140,
+          "end": 205
+        },
+        {
+          "pid": "4",
+          "start": 205,
+          "end": 325
+        },
+        {
+          "pid": "5",
+          "start": 325,
+          "end": 355
+        },
+        {
+          "pid": "6",
+          "start": 355,
+          "end": 445
+        },
+        {
+          "pid": "7",
+          "start": 445,
+          "end": 470
+        },
+        {
+          "pid": "8",
+          "start": 470,
+          "end": 510
+        },
+        {
+          "pid": "9",
+          "start": 510,
+          "end": 600
+        },
+        {
+          "pid": "10",
+          "start": 600,
+          "end": 675
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 184,
+        "averageTurnaroundTime": 251.5,
+        "averageResponseTime": 184,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "3": {
+            "waitingTime": 100,
+            "turnaroundTime": 165,
+            "responseTime": 100
+          },
+          "4": {
+            "waitingTime": 145,
+            "turnaroundTime": 265,
+            "responseTime": 145
+          },
+          "5": {
+            "waitingTime": 245,
+            "turnaroundTime": 275,
+            "responseTime": 245
+          },
+          "6": {
+            "waitingTime": 265,
+            "turnaroundTime": 355,
+            "responseTime": 265
+          },
+          "7": {
+            "waitingTime": 325,
+            "turnaroundTime": 350,
+            "responseTime": 325
+          },
+          "8": {
+            "waitingTime": 230,
+            "turnaroundTime": 270,
+            "responseTime": 230
+          },
+          "9": {
+            "waitingTime": 250,
+            "turnaroundTime": 340,
+            "responseTime": 250
+          },
+          "10": {
+            "waitingTime": 220,
+            "turnaroundTime": 295,
+            "responseTime": 220
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "621e663f-d885-4ef0-b88b-5e845c69c61a",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "3",
+          "start": 140,
+          "end": 205
+        },
+        {
+          "pid": "4",
+          "start": 205,
+          "end": 325
+        },
+        {
+          "pid": "5",
+          "start": 325,
+          "end": 355
+        },
+        {
+          "pid": "6",
+          "start": 355,
+          "end": 445
+        },
+        {
+          "pid": "7",
+          "start": 445,
+          "end": 470
+        },
+        {
+          "pid": "8",
+          "start": 470,
+          "end": 510
+        },
+        {
+          "pid": "9",
+          "start": 510,
+          "end": 600
+        },
+        {
+          "pid": "10",
+          "start": 600,
+          "end": 675
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 184,
+        "averageTurnaroundTime": 251.5,
+        "averageResponseTime": 184,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "3": {
+            "waitingTime": 100,
+            "turnaroundTime": 165,
+            "responseTime": 100
+          },
+          "4": {
+            "waitingTime": 145,
+            "turnaroundTime": 265,
+            "responseTime": 145
+          },
+          "5": {
+            "waitingTime": 245,
+            "turnaroundTime": 275,
+            "responseTime": 245
+          },
+          "6": {
+            "waitingTime": 265,
+            "turnaroundTime": 355,
+            "responseTime": 265
+          },
+          "7": {
+            "waitingTime": 325,
+            "turnaroundTime": 350,
+            "responseTime": 325
+          },
+          "8": {
+            "waitingTime": 230,
+            "turnaroundTime": 270,
+            "responseTime": 230
+          },
+          "9": {
+            "waitingTime": 250,
+            "turnaroundTime": 340,
+            "responseTime": 250
+          },
+          "10": {
+            "waitingTime": 220,
+            "turnaroundTime": 295,
+            "responseTime": 220
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "24748c54-5e47-48e6-8efd-efa16ff1a7bd",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "3",
+          "start": 140,
+          "end": 205
+        },
+        {
+          "pid": "4",
+          "start": 205,
+          "end": 325
+        },
+        {
+          "pid": "5",
+          "start": 325,
+          "end": 355
+        },
+        {
+          "pid": "6",
+          "start": 355,
+          "end": 445
+        },
+        {
+          "pid": "7",
+          "start": 445,
+          "end": 470
+        },
+        {
+          "pid": "8",
+          "start": 470,
+          "end": 510
+        },
+        {
+          "pid": "9",
+          "start": 510,
+          "end": 600
+        },
+        {
+          "pid": "10",
+          "start": 600,
+          "end": 675
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 184,
+        "averageTurnaroundTime": 251.5,
+        "averageResponseTime": 184,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "3": {
+            "waitingTime": 100,
+            "turnaroundTime": 165,
+            "responseTime": 100
+          },
+          "4": {
+            "waitingTime": 145,
+            "turnaroundTime": 265,
+            "responseTime": 145
+          },
+          "5": {
+            "waitingTime": 245,
+            "turnaroundTime": 275,
+            "responseTime": 245
+          },
+          "6": {
+            "waitingTime": 265,
+            "turnaroundTime": 355,
+            "responseTime": 265
+          },
+          "7": {
+            "waitingTime": 325,
+            "turnaroundTime": 350,
+            "responseTime": 325
+          },
+          "8": {
+            "waitingTime": 230,
+            "turnaroundTime": 270,
+            "responseTime": 230
+          },
+          "9": {
+            "waitingTime": 250,
+            "turnaroundTime": 340,
+            "responseTime": 250
+          },
+          "10": {
+            "waitingTime": 220,
+            "turnaroundTime": 295,
+            "responseTime": 220
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "01a177f9-a2e8-4058-a4ab-bdc5b63e4132",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "3",
+          "start": 140,
+          "end": 205
+        },
+        {
+          "pid": "4",
+          "start": 205,
+          "end": 325
+        },
+        {
+          "pid": "5",
+          "start": 325,
+          "end": 355
+        },
+        {
+          "pid": "6",
+          "start": 355,
+          "end": 445
+        },
+        {
+          "pid": "7",
+          "start": 445,
+          "end": 470
+        },
+        {
+          "pid": "8",
+          "start": 470,
+          "end": 510
+        },
+        {
+          "pid": "9",
+          "start": 510,
+          "end": 600
+        },
+        {
+          "pid": "10",
+          "start": 600,
+          "end": 675
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 184,
+        "averageTurnaroundTime": 251.5,
+        "averageResponseTime": 184,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "3": {
+            "waitingTime": 100,
+            "turnaroundTime": 165,
+            "responseTime": 100
+          },
+          "4": {
+            "waitingTime": 145,
+            "turnaroundTime": 265,
+            "responseTime": 145
+          },
+          "5": {
+            "waitingTime": 245,
+            "turnaroundTime": 275,
+            "responseTime": 245
+          },
+          "6": {
+            "waitingTime": 265,
+            "turnaroundTime": 355,
+            "responseTime": 265
+          },
+          "7": {
+            "waitingTime": 325,
+            "turnaroundTime": 350,
+            "responseTime": 325
+          },
+          "8": {
+            "waitingTime": 230,
+            "turnaroundTime": 270,
+            "responseTime": 230
+          },
+          "9": {
+            "waitingTime": 250,
+            "turnaroundTime": 340,
+            "responseTime": 250
+          },
+          "10": {
+            "waitingTime": 220,
+            "turnaroundTime": 295,
+            "responseTime": 220
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "4cad19f4-26ab-49fd-8281-c84311e7f5f5",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "5",
+          "start": 140,
+          "end": 170
+        },
+        {
+          "pid": "6",
+          "start": 170,
+          "end": 260
+        },
+        {
+          "pid": "7",
+          "start": 260,
+          "end": 285
+        },
+        {
+          "pid": "8",
+          "start": 285,
+          "end": 325
+        },
+        {
+          "pid": "9",
+          "start": 325,
+          "end": 415
+        },
+        {
+          "pid": "10",
+          "start": 415,
+          "end": 490
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 60.625,
+        "averageTurnaroundTime": 121.875,
+        "averageResponseTime": 60.625,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "5": {
+            "waitingTime": 60,
+            "turnaroundTime": 90,
+            "responseTime": 60
+          },
+          "6": {
+            "waitingTime": 80,
+            "turnaroundTime": 170,
+            "responseTime": 80
+          },
+          "7": {
+            "waitingTime": 140,
+            "turnaroundTime": 165,
+            "responseTime": 140
+          },
+          "8": {
+            "waitingTime": 45,
+            "turnaroundTime": 85,
+            "responseTime": 45
+          },
+          "9": {
+            "waitingTime": 65,
+            "turnaroundTime": 155,
+            "responseTime": 65
+          },
+          "10": {
+            "waitingTime": 35,
+            "turnaroundTime": 110,
+            "responseTime": 35
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "e4059776-e159-4508-9219-a46ed045bb97",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "3",
+          "start": 140,
+          "end": 205
+        },
+        {
+          "pid": "4",
+          "start": 205,
+          "end": 325
+        },
+        {
+          "pid": "5",
+          "start": 325,
+          "end": 355
+        },
+        {
+          "pid": "6",
+          "start": 355,
+          "end": 445
+        },
+        {
+          "pid": "7",
+          "start": 445,
+          "end": 470
+        },
+        {
+          "pid": "8",
+          "start": 470,
+          "end": 510
+        },
+        {
+          "pid": "9",
+          "start": 510,
+          "end": 600
+        },
+        {
+          "pid": "10",
+          "start": 600,
+          "end": 675
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 184,
+        "averageTurnaroundTime": 251.5,
+        "averageResponseTime": 184,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "3": {
+            "waitingTime": 100,
+            "turnaroundTime": 165,
+            "responseTime": 100
+          },
+          "4": {
+            "waitingTime": 145,
+            "turnaroundTime": 265,
+            "responseTime": 145
+          },
+          "5": {
+            "waitingTime": 245,
+            "turnaroundTime": 275,
+            "responseTime": 245
+          },
+          "6": {
+            "waitingTime": 265,
+            "turnaroundTime": 355,
+            "responseTime": 265
+          },
+          "7": {
+            "waitingTime": 325,
+            "turnaroundTime": 350,
+            "responseTime": 325
+          },
+          "8": {
+            "waitingTime": 230,
+            "turnaroundTime": 270,
+            "responseTime": 230
+          },
+          "9": {
+            "waitingTime": 250,
+            "turnaroundTime": 340,
+            "responseTime": 250
+          },
+          "10": {
+            "waitingTime": 220,
+            "turnaroundTime": 295,
+            "responseTime": 220
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "14a1d3ea-c3ee-4b56-80f7-7c7ad2eec8af",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "3",
+          "start": 140,
+          "end": 205
+        },
+        {
+          "pid": "4",
+          "start": 205,
+          "end": 325
+        },
+        {
+          "pid": "5",
+          "start": 325,
+          "end": 355
+        },
+        {
+          "pid": "6",
+          "start": 355,
+          "end": 445
+        },
+        {
+          "pid": "7",
+          "start": 445,
+          "end": 470
+        },
+        {
+          "pid": "8",
+          "start": 470,
+          "end": 510
+        },
+        {
+          "pid": "9",
+          "start": 510,
+          "end": 600
+        },
+        {
+          "pid": "10",
+          "start": 600,
+          "end": 675
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 184,
+        "averageTurnaroundTime": 251.5,
+        "averageResponseTime": 184,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "3": {
+            "waitingTime": 100,
+            "turnaroundTime": 165,
+            "responseTime": 100
+          },
+          "4": {
+            "waitingTime": 145,
+            "turnaroundTime": 265,
+            "responseTime": 145
+          },
+          "5": {
+            "waitingTime": 245,
+            "turnaroundTime": 275,
+            "responseTime": 245
+          },
+          "6": {
+            "waitingTime": 265,
+            "turnaroundTime": 355,
+            "responseTime": 265
+          },
+          "7": {
+            "waitingTime": 325,
+            "turnaroundTime": 350,
+            "responseTime": 325
+          },
+          "8": {
+            "waitingTime": 230,
+            "turnaroundTime": 270,
+            "responseTime": 230
+          },
+          "9": {
+            "waitingTime": 250,
+            "turnaroundTime": 340,
+            "responseTime": 250
+          },
+          "10": {
+            "waitingTime": 220,
+            "turnaroundTime": 295,
+            "responseTime": 220
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "e8eed6b4-e1c3-4c16-a7c0-08a580d06cad",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "3",
+          "start": 140,
+          "end": 205
+        },
+        {
+          "pid": "4",
+          "start": 205,
+          "end": 325
+        },
+        {
+          "pid": "5",
+          "start": 325,
+          "end": 355
+        },
+        {
+          "pid": "6",
+          "start": 355,
+          "end": 445
+        },
+        {
+          "pid": "7",
+          "start": 445,
+          "end": 470
+        },
+        {
+          "pid": "8",
+          "start": 470,
+          "end": 510
+        },
+        {
+          "pid": "9",
+          "start": 510,
+          "end": 600
+        },
+        {
+          "pid": "10",
+          "start": 600,
+          "end": 675
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 184,
+        "averageTurnaroundTime": 251.5,
+        "averageResponseTime": 184,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "3": {
+            "waitingTime": 100,
+            "turnaroundTime": 165,
+            "responseTime": 100
+          },
+          "4": {
+            "waitingTime": 145,
+            "turnaroundTime": 265,
+            "responseTime": 145
+          },
+          "5": {
+            "waitingTime": 245,
+            "turnaroundTime": 275,
+            "responseTime": 245
+          },
+          "6": {
+            "waitingTime": 265,
+            "turnaroundTime": 355,
+            "responseTime": 265
+          },
+          "7": {
+            "waitingTime": 325,
+            "turnaroundTime": 350,
+            "responseTime": 325
+          },
+          "8": {
+            "waitingTime": 230,
+            "turnaroundTime": 270,
+            "responseTime": 230
+          },
+          "9": {
+            "waitingTime": 250,
+            "turnaroundTime": 340,
+            "responseTime": 250
+          },
+          "10": {
+            "waitingTime": 220,
+            "turnaroundTime": 295,
+            "responseTime": 220
+          }
+        }
+      }
+    },
+    {
+      "simulation_id": "a993ed0f-c529-4bd7-956c-1cfeb0a0a09a",
+      "user_id": "677b5b5f-d3e7-47b6-a93c-e81317be3f97",
+      "process_set_id": "09d01f22-d00f-4df7-8115-0db5b0bf744c",
+      "algorithm": "FCFS",
+      "time_quantum": null,
+      "gantt_data": [
+        {
+          "pid": "1",
+          "start": 0,
+          "end": 80
+        },
+        {
+          "pid": "2",
+          "start": 80,
+          "end": 140
+        },
+        {
+          "pid": "3",
+          "start": 140,
+          "end": 205
+        },
+        {
+          "pid": "4",
+          "start": 205,
+          "end": 325
+        },
+        {
+          "pid": "5",
+          "start": 325,
+          "end": 355
+        },
+        {
+          "pid": "6",
+          "start": 355,
+          "end": 445
+        },
+        {
+          "pid": "7",
+          "start": 445,
+          "end": 470
+        },
+        {
+          "pid": "8",
+          "start": 470,
+          "end": 510
+        },
+        {
+          "pid": "9",
+          "start": 510,
+          "end": 600
+        },
+        {
+          "pid": "10",
+          "start": 600,
+          "end": 675
+        }
+      ],
+      "metrics": {
+        "averageWaitingTime": 184,
+        "averageTurnaroundTime": 251.5,
+        "averageResponseTime": 184,
+        "processMetrics": {
+          "1": {
+            "waitingTime": 0,
+            "turnaroundTime": 80,
+            "responseTime": 0
+          },
+          "2": {
+            "waitingTime": 60,
+            "turnaroundTime": 120,
+            "responseTime": 60
+          },
+          "3": {
+            "waitingTime": 100,
+            "turnaroundTime": 165,
+            "responseTime": 100
+          },
+          "4": {
+            "waitingTime": 145,
+            "turnaroundTime": 265,
+            "responseTime": 145
+          },
+          "5": {
+            "waitingTime": 245,
+            "turnaroundTime": 275,
+            "responseTime": 245
+          },
+          "6": {
+            "waitingTime": 265,
+            "turnaroundTime": 355,
+            "responseTime": 265
+          },
+          "7": {
+            "waitingTime": 325,
+            "turnaroundTime": 350,
+            "responseTime": 325
+          },
+          "8": {
+            "waitingTime": 230,
+            "turnaroundTime": 270,
+            "responseTime": 230
+          },
+          "9": {
+            "waitingTime": 250,
+            "turnaroundTime": 340,
+            "responseTime": 250
+          },
+          "10": {
+            "waitingTime": 220,
+            "turnaroundTime": 295,
+            "responseTime": 220
+          }
+        }
+      }
+    }
+  ],
+  "exportDate": "2025-03-13T18:30:57.143Z"
+}

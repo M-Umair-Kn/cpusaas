@@ -19,6 +19,106 @@ A web-based application for simulating and visualizing CPU scheduling algorithms
 - **Backend**: Node.js, Express.js
 - **Database**: PostgreSQL
 
+## Installation Guide
+
+### Prerequisites
+
+- Node.js (v14+)
+- PostgreSQL (v12+)
+- Git
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/M-Umair-Kn/cpusaas.git
+cd cpusaas
+```
+
+### Database Setup
+
+1. Install PostgreSQL if not already installed:
+   - Windows: Download and install from [PostgreSQL Official Website](https://www.postgresql.org/download/windows/)
+   - Linux: `sudo apt-get install postgresql postgresql-contrib`
+   - macOS: `brew install postgresql`
+
+2. Create a PostgreSQL database:
+   ```bash
+   createdb cpu_scheduling
+   ```
+
+3. Run the database setup script:
+   ```bash
+   psql -d cpu_scheduling -f server/db_setup.sql
+   ```
+
+4. Import sample data (optional):
+   ```bash
+   # Windows
+   type server/database_export.json | psql -d cpu_scheduling -c "COPY (SELECT json_populate_record(null::users, json)) TO STDOUT"
+   
+   # Linux/macOS
+   cat server/database_export.json | psql -d cpu_scheduling -c "COPY (SELECT json_populate_record(null::users, json)) TO STDOUT"
+   ```
+
+### Backend Setup
+
+1. Navigate to the server directory:
+   ```bash
+   cd server
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Configure environment variables:
+   ```bash
+   # Copy example environment file
+   cp .env.example .env
+   
+   # Edit .env file with your database credentials
+   # Replace these values with your actual configuration
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_NAME=cpu_scheduling
+   DB_USER=your_username
+   DB_PASSWORD=your_password
+   JWT_SECRET=your_jwt_secret
+   ```
+
+4. Start the server:
+   ```bash
+   npm start
+   ```
+
+### Frontend Setup
+
+1. Open a new terminal and navigate to the client directory:
+   ```bash
+   cd client
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm start
+   ```
+
+The application should now be running at `http://localhost:3000`
+
+## Default Test Account
+
+You can use the following test account to try the application:
+```
+Email: abcd@efg.com
+Password: your_password_here
+```
+
 ## Project Structure
 
 ```
@@ -40,63 +140,6 @@ A web-based application for simulating and visualizing CPU scheduling algorithms
     ├── index.js            # Server entry point
     └── package.json        # Backend dependencies
 ```
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js (v14+)
-- PostgreSQL (v12+)
-
-### Database Setup
-
-1. Create a PostgreSQL database:
-   ```
-   createdb cpu_scheduling
-   ```
-
-2. Run the setup script:
-   ```
-   psql -d cpu_scheduling -f server/db_setup.sql
-   ```
-
-### Backend Setup
-
-1. Navigate to the server directory:
-   ```
-   cd server
-   ```
-
-2. Install dependencies:
-   ```
-   npm install
-   ```
-
-3. Configure environment variables:
-   - Copy `.env.example` to `.env`
-   - Update database credentials and JWT secret
-
-4. Start the server:
-   ```
-   npm start
-   ```
-
-### Frontend Setup
-
-1. Navigate to the client directory:
-   ```
-   cd client
-   ```
-
-2. Install dependencies:
-   ```
-   npm install
-   ```
-
-3. Start the development server:
-   ```
-   npm start
-   ```
 
 ## API Endpoints
 
@@ -120,6 +163,30 @@ A web-based application for simulating and visualizing CPU scheduling algorithms
 - `GET /api/simulate` - Get all simulations
 - `GET /api/simulate/:simulationId` - Get a specific simulation
 
-## License
+## Troubleshooting
 
-MIT 
+### Common Issues
+
+1. **Database Connection Error**
+   - Verify PostgreSQL is running
+   - Check database credentials in `.env`
+   - Ensure database exists and is accessible
+
+2. **Port Already in Use**
+   - Default ports: Backend (5000), Frontend (3000)
+   - Change ports in respective configuration files if needed
+
+3. **Module Not Found Errors**
+   - Run `npm install` in both client and server directories
+   - Clear npm cache: `npm cache clean --force`
+
+### Getting Help
+
+If you encounter any issues:
+1. Check the console logs for error messages
+2. Review the troubleshooting section above
+3. Open an issue on GitHub with:
+   - Detailed description of the problem
+   - Steps to reproduce
+   - Error messages and logs
+

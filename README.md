@@ -64,7 +64,7 @@ cd cpusaas
       To restore a shared database backup:
       ```bash
       cd server
-      npm run db:import server/data/backups/db-backup-[timestamp].sql
+      npm run db:import data/backups/db-backup-[timestamp].sql
       ```
       
       ### Important Notes

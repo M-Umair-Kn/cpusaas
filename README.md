@@ -66,6 +66,11 @@ cd cpusaas
       cd server
       npm run db:import data/backups/db-backup-[timestamp].sql
       ```
+      Make sure to replace the timestamp with acctual timestamp given to file, as in following dumy file which contains the testing data.
+      ```bash
+      cd server
+      npm run db:import data/backups/db-backup-2025-03-18T15-33-03-936Z.sql
+      ```
       
       ### Important Notes
       - The import process will recreate the database from scratch

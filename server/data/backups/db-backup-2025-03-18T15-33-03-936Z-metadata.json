@@ -1,0 +1,11 @@
+{
+  "exportDate": "2025-03-18T15:33:04.340Z",
+  "dbName": "cpu_scheduling",
+  "version": "1.0.0",
+  "tables": [
+    "users",
+    "process_sets",
+    "processes",
+    "simulations"
+  ]
+}

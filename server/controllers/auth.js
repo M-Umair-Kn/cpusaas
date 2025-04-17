@@ -1,10 +1,13 @@
-const pool = require('../config/db');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
+import pool from '../config/db.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { config } from 'dotenv';
+
+// Load environment variables
+config();
 
 // Register a new user
-exports.register = async (req, res) => {
+export const register = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -51,7 +54,7 @@ exports.register = async (req, res) => {
 };
 
 // Login user
-exports.login = async (req, res) => {
+export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -95,7 +98,7 @@ exports.login = async (req, res) => {
 };
 
 // Get user profile
-exports.getProfile = async (req, res) => {
+export const getProfile = async (req, res) => {
   try {
     const user = await pool.query(
       'SELECT user_id, email, registration_date FROM users WHERE user_id = $1',
@@ -111,4 +114,4 @@ exports.getProfile = async (req, res) => {
     console.error(err.message);
     res.status(500).json({ message: 'Server error' });
   }
-}; 
+};

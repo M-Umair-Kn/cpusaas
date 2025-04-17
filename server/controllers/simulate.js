@@ -1,4 +1,4 @@
-const pool = require('../config/db');
+import pool from '../config/db.js';
 
 // Helper function to calculate metrics
 const calculateMetrics = (gantt, processes) => {
@@ -324,7 +324,7 @@ const roundRobin = (processes, timeQuantum = 1) => {
 };
 
 // Run simulation
-exports.runSimulation = async (req, res) => {
+export const runSimulation = async (req, res) => {
   const { algorithm, processes, processSetId, timeQuantum } = req.body;
   const userId = req.user.id;
 
@@ -374,7 +374,7 @@ exports.runSimulation = async (req, res) => {
 };
 
 // Get simulations for a user
-exports.getSimulations = async (req, res) => {
+export const getSimulations = async (req, res) => {
   try {
     const simulations = await pool.query(
       'SELECT s.*, ps.name as process_set_name FROM simulations s ' +
@@ -391,7 +391,7 @@ exports.getSimulations = async (req, res) => {
 };
 
 // Get a specific simulation
-exports.getSimulation = async (req, res) => {
+export const getSimulation = async (req, res) => {
   const { simulationId } = req.params;
 
   try {
@@ -409,4 +409,4 @@ exports.getSimulation = async (req, res) => {
     console.error(err.message);
     res.status(500).json({ message: 'Server error' });
   }
-}; 
+};

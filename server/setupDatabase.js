@@ -1,7 +1,17 @@
-const { Pool } = require('pg');
-const fs = require('fs');
-const path = require('path');
-require('dotenv').config();
+import pg from 'pg';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { config } from 'dotenv';
+
+// Load environment variables
+config();
+
+// Get the directory name of the current module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const { Pool } = pg;
 
 async function setupDatabase() {
   // Connection to PostgreSQL server with 'postgres' database to create our database
@@ -77,7 +87,7 @@ async function setupDatabase() {
 }
 
 // If run directly
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   setupDatabase()
     .then(success => {
       if (success) {
@@ -91,7 +101,7 @@ if (require.main === module) {
       console.error('Unhandled error:', err);
       process.exit(1);
     });
-} else {
-  // Export for use in other files
-  module.exports = setupDatabase;
-} 
+}
+
+// Export for use in other files
+export default setupDatabase;

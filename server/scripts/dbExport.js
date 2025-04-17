@@ -1,7 +1,15 @@
-const { spawn } = require('child_process');
-const path = require('path');
-const fs = require('fs');
-require('dotenv').config({ path: path.join(__dirname, '../.env') });
+import { spawn } from 'child_process';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { config } from 'dotenv';
+
+// Get the directory name of the current module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load environment variables
+config({ path: path.join(__dirname, '../.env') });
 
 const {
     DB_USER,
@@ -60,4 +68,4 @@ dumpProcess.on('close', (code) => {
     } else {
         console.error(`Export failed with code ${code}`);
     }
-}); 
+});

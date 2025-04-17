@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import * as simulateController from '../controllers/simulate.js';
+import authMiddleware from '../middlewares/auth.js';
+
 const router = express.Router();
-const simulateController = require('../controllers/simulate');
-const authMiddleware = require('../middlewares/auth');
 
 // Apply auth middleware to all routes
 router.use(authMiddleware);
@@ -15,4 +16,4 @@ router.get('/', simulateController.getSimulations);
 // Get a specific simulation
 router.get('/:simulationId', simulateController.getSimulation);
 
-module.exports = router; 
+export default router;

@@ -1,7 +1,7 @@
-const pool = require('../config/db');
+import pool from '../config/db.js';
 
 // Create a new process set
-exports.createProcessSet = async (req, res) => {
+export const createProcessSet = async (req, res) => {
   const { name, processes } = req.body;
   const userId = req.user.id;
 
@@ -47,7 +47,7 @@ exports.createProcessSet = async (req, res) => {
 };
 
 // Get all process sets for a user
-exports.getProcessSets = async (req, res) => {
+export const getProcessSets = async (req, res) => {
   try {
     const processSets = await pool.query(
       'SELECT * FROM process_sets WHERE user_id = $1 ORDER BY created_date DESC',
@@ -62,7 +62,7 @@ exports.getProcessSets = async (req, res) => {
 };
 
 // Get a specific process set with its processes
-exports.getProcessSet = async (req, res) => {
+export const getProcessSet = async (req, res) => {
   const { processSetId } = req.params;
 
   try {
@@ -93,7 +93,7 @@ exports.getProcessSet = async (req, res) => {
 };
 
 // Update a process set
-exports.updateProcessSet = async (req, res) => {
+export const updateProcessSet = async (req, res) => {
   const { processSetId } = req.params;
   const { name, processes } = req.body;
 
@@ -150,7 +150,7 @@ exports.updateProcessSet = async (req, res) => {
 };
 
 // Delete a process set
-exports.deleteProcessSet = async (req, res) => {
+export const deleteProcessSet = async (req, res) => {
   const { processSetId } = req.params;
 
   try {
@@ -189,4 +189,4 @@ exports.deleteProcessSet = async (req, res) => {
     console.error(err.message);
     res.status(500).json({ message: 'Server error' });
   }
-}; 
+};

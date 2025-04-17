@@ -1,4 +1,9 @@
-const path = require('path');
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Get the directory name of the current module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const dataConfig = {
     // Base data directory
@@ -20,4 +25,4 @@ const dataConfig = {
     }
 };
 
-module.exports = dataConfig; 
+export default dataConfig;

@@ -1,7 +1,10 @@
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
+import jwt from 'jsonwebtoken';
+import { config } from 'dotenv';
 
-module.exports = (req, res, next) => {
+// Load environment variables
+config();
+
+export default (req, res, next) => {
   // Get token from header
   const token = req.header('Authorization')?.replace('Bearer ', '');
 
@@ -18,4 +21,4 @@ module.exports = (req, res, next) => {
   } catch (err) {
     res.status(401).json({ message: 'Token is not valid' });
   }
-}; 
+};

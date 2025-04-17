@@ -1,13 +1,16 @@
-const express = require('express');
-const cors = require('cors');
-const setupDatabase = require('./setupDatabase');
-const DataManager = require('./utils/dataManager');
-require('dotenv').config();
+import express from 'express';
+import cors from 'cors';
+import { config } from 'dotenv';
+import setupDatabase from './setupDatabase.js';
+import DataManager from './utils/dataManager.js';
 
 // Import routes
-const authRoutes = require('./routes/auth');
-const processRoutes = require('./routes/process');
-const simulateRoutes = require('./routes/simulate');
+import authRoutes from './routes/auth.js';
+import processRoutes from './routes/process.js';
+import simulateRoutes from './routes/simulate.js';
+
+// Load environment variables
+config();
 
 // Initialize express app
 const app = express();
@@ -50,4 +53,4 @@ app.get('/', (req, res) => {
 });
 
 // Initialize the application
-initializeApp(); 
+initializeApp();

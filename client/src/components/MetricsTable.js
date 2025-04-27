@@ -22,6 +22,14 @@ const MetricsTable = ({ metrics }) => {
           <h4>Average Response Time</h4>
           <p>{metrics.averageResponseTime.toFixed(2)}</p>
         </div>
+        <div className="metric-card">
+          <h4>CPU Utilization</h4>
+          <p>{(metrics.cpuUtilization || 0).toFixed(2)}%</p>
+        </div>
+        <div className="metric-card">
+          <h4>Throughput</h4>
+          <p>{(metrics.throughput || 0).toFixed(4)} proc/unit</p>
+        </div>
       </div>
 
       <h4>Process Details</h4>
@@ -49,4 +57,4 @@ const MetricsTable = ({ metrics }) => {
   );
 };
 
-export default MetricsTable; 
+export default MetricsTable;

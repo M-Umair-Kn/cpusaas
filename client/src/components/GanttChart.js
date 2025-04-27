@@ -33,6 +33,7 @@ const GanttChart = ({ gantt, onTimeChange }) => {
   const [animationSpeed, setAnimationSpeed] = useState(1);
   const [maxTime, setMaxTime] = useState(0);
   const [processColors, setProcessColors] = useState({});
+  const [exportMessage, setExportMessage] = useState('');
   
   // Memoize grouped gantt data to prevent unnecessary recalculations
   const groupedGantt = useMemo(() => {
@@ -410,6 +411,61 @@ const GanttChart = ({ gantt, onTimeChange }) => {
     setAnimationSpeed(parseFloat(e.target.value));
   };
 
+  // Export Gantt chart as image
+  const exportChartAsImage = () => {
+    if (!chartRef.current) {
+      setExportMessage('Cannot export: Canvas not available');
+      setTimeout(() => setExportMessage(''), 3000);
+      return;
+    }
+
+    try {
+      // Temporarily pause animation if playing
+      const wasPlaying = isPlaying;
+      if (wasPlaying) {
+        setIsPlaying(false);
+      }
+
+      // Create a new canvas for the export with higher resolution
+      const exportCanvas = document.createElement('canvas');
+      const exportCtx = exportCanvas.getContext('2d');
+      const scale = 2; // Higher resolution for better image quality
+      
+      // Set the export canvas size
+      exportCanvas.width = chartRef.current.width * scale;
+      exportCanvas.height = chartRef.current.height * scale;
+      
+      // Draw a white background
+      exportCtx.fillStyle = '#ffffff';
+      exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+      
+      // Draw the current canvas content onto the export canvas with scaling
+      exportCtx.scale(scale, scale);
+      exportCtx.drawImage(chartRef.current, 0, 0);
+      
+      // Convert to image and download
+      const imageUrl = exportCanvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = 'gantt_chart.png';
+      link.href = imageUrl;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Resume animation if it was playing
+      if (wasPlaying) {
+        setIsPlaying(true);
+      }
+      
+      setExportMessage('Gantt chart exported successfully!');
+      setTimeout(() => setExportMessage(''), 3000);
+    } catch (error) {
+      console.error('Error exporting chart:', error);
+      setExportMessage('Error exporting chart');
+      setTimeout(() => setExportMessage(''), 3000);
+    }
+  };
+
   // Keyboard shortcuts for controlling animation
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -567,17 +623,15 @@ const GanttChart = ({ gantt, onTimeChange }) => {
               disabled={currentTime <= 0}
               title="Step backward (Left Arrow)"
             >
-              &laquo; Step
+              &laquo;
             </button>
-          </div>
-          
-          <div className="control-buttons">
+
             <button 
               className={`control-button ${isPlaying ? 'reset-button' : 'play-button'}`} 
               onClick={togglePlay}
               title="Play/Pause (Space)"
             >
-              {isPlaying ? 'Pause' : 'Play'}
+              {isPlaying ? '⏸' : '▶'}
             </button>
             
             <button 
@@ -585,7 +639,7 @@ const GanttChart = ({ gantt, onTimeChange }) => {
               onClick={resetAnimation}
               title="Reset (R)"
             >
-              Reset
+              &#9209;
             </button>
             
             <button 
@@ -594,8 +648,9 @@ const GanttChart = ({ gantt, onTimeChange }) => {
               disabled={currentTime >= maxTime}
               title="Step forward (Right Arrow)"
             >
-              Step &raquo;
+              &raquo;
             </button>
+
           </div>
           
           <div className="speed-control">
@@ -610,7 +665,23 @@ const GanttChart = ({ gantt, onTimeChange }) => {
               <option value="2">2x</option>
               <option value="5">5x</option>
               <option value="10">10x</option>
+              <option value="15">15x</option>
+              <option value="20">20x</option>
             </select>
+          </div>
+          
+          <div className="export-control">
+            <button 
+              className="control-button export-button" 
+              onClick={exportChartAsImage}
+              title="Export as PNG image"
+              disabled={!gantt || gantt.length === 0}
+            >
+              Export Chart
+            </button>
+            {exportMessage && (
+              <div className="export-message">{exportMessage}</div>
+            )}
           </div>
         </div>
         
@@ -692,4 +763,4 @@ const GanttChart = ({ gantt, onTimeChange }) => {
   );
 };
 
-export default GanttChart; 
+export default GanttChart;

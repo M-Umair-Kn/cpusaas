@@ -6,6 +6,8 @@ const calculateMetrics = (gantt, processes) => {
     averageWaitingTime: 0,
     averageTurnaroundTime: 0,
     averageResponseTime: 0,
+    cpuUtilization: 0,
+    throughput: 0,
     processMetrics: {}
   };
 
@@ -55,6 +57,20 @@ const calculateMetrics = (gantt, processes) => {
   metrics.averageWaitingTime = totalWaitingTime / pids.length;
   metrics.averageTurnaroundTime = totalTurnaroundTime / pids.length;
   metrics.averageResponseTime = totalResponseTime / pids.length;
+
+  // Calculate CPU Utilization
+  if (gantt.length > 0) {
+    // Total time from start to finish
+    const totalSimulationTime = gantt[gantt.length - 1].end - Math.min(...processes.map(p => p.arrival_time));
+    
+    // Total time CPU was busy (sum of all gantt chart segments)
+    const totalBusyTime = gantt.reduce((sum, segment) => sum + (segment.end - segment.start), 0);
+    
+    metrics.cpuUtilization = (totalBusyTime / totalSimulationTime) * 100;
+    
+    // Calculate throughput (processes per unit time)
+    metrics.throughput = processes.length / totalSimulationTime;
+  }
 
   return metrics;
 };
@@ -259,6 +275,94 @@ const srtf = (processes) => {
   return { gantt: mergedGantt, metrics: calculateMetrics(mergedGantt, processes) };
 };
 
+// Priority Scheduling (Preemptive) algorithm
+const priorityPreemptive = (processes) => {
+  const remainingProcesses = [...processes].map(p => ({ ...p, remaining: p.burst_time }));
+  
+  let currentTime = 0;
+  const gantt = [];
+  let lastRunningPid = null;
+  let lastStartTime = 0;
+  
+  while (remainingProcesses.length > 0) {
+    // Find ready processes
+    const readyProcesses = remainingProcesses.filter(p => p.arrival_time <= currentTime);
+    
+    if (readyProcesses.length === 0) {
+      // No processes are ready, move time forward to the next arrival
+      const nextArrival = Math.min(...remainingProcesses.map(p => p.arrival_time));
+      currentTime = nextArrival;
+      continue;
+    }
+    
+    // Find the process with the highest priority (lower number = higher priority)
+    const highestPriorityJob = readyProcesses.reduce(
+      (min, p) => (p.priority < min.priority) ? p : min,
+      readyProcesses[0]
+    );
+    
+    // If the running process changes, add the previous one to the Gantt chart
+    if (lastRunningPid !== null && lastRunningPid !== highestPriorityJob.pid) {
+      gantt.push({
+        pid: lastRunningPid,
+        start: lastStartTime,
+        end: currentTime
+      });
+      lastStartTime = currentTime;
+    } else if (lastRunningPid === null) {
+      lastStartTime = currentTime;
+    }
+    
+    // Update the running process
+    lastRunningPid = highestPriorityJob.pid;
+    
+    // Determine how long this process will run
+    const timeSlice = 1; // Run for 1 time unit and then reevaluate
+    
+    // Check if any new process arrives during this time slice
+    const nextArrival = remainingProcesses
+      .filter(p => p.arrival_time > currentTime)
+      .reduce((min, p) => p.arrival_time < min ? p.arrival_time : min, currentTime + timeSlice);
+    
+    const runTime = Math.min(timeSlice, nextArrival - currentTime, highestPriorityJob.remaining);
+    
+    // Update remaining time for the running process
+    const runningProcessIndex = remainingProcesses.findIndex(p => p.pid === highestPriorityJob.pid);
+    remainingProcesses[runningProcessIndex].remaining -= runTime;
+    
+    // Move time forward
+    currentTime += runTime;
+    
+    // If the process is complete, remove it
+    if (remainingProcesses[runningProcessIndex].remaining <= 0) {
+      // Add the final segment to the Gantt chart
+      gantt.push({
+        pid: lastRunningPid,
+        start: lastStartTime,
+        end: currentTime
+      });
+      
+      // Reset tracking variables
+      lastRunningPid = null;
+      
+      // Remove the completed process
+      remainingProcesses.splice(runningProcessIndex, 1);
+    }
+  }
+  
+  // Merge adjacent Gantt entries for the same process
+  const mergedGantt = [];
+  for (let i = 0; i < gantt.length; i++) {
+    if (i === 0 || gantt[i].pid !== gantt[i-1].pid) {
+      mergedGantt.push({ ...gantt[i] });
+    } else {
+      mergedGantt[mergedGantt.length - 1].end = gantt[i].end;
+    }
+  }
+  
+  return { gantt: mergedGantt, metrics: calculateMetrics(mergedGantt, processes) };
+};
+
 // Round Robin (RR) algorithm
 const roundRobin = (processes, timeQuantum = 1) => {
   const remainingProcesses = [...processes].map(p => ({ ...p, remaining: p.burst_time }));
@@ -347,6 +451,9 @@ export const runSimulation = async (req, res) => {
         break;
       case 'Priority':
         result = priorityNonPreemptive(processes);
+        break;
+      case 'Priority (Preemptive)':
+        result = priorityPreemptive(processes);
         break;
       case 'SJF (Non-Preemptive)': // For backward compatibility
         result = sjfNonPreemptive(processes);

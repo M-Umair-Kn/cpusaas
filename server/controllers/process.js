@@ -167,6 +167,12 @@ export const deleteProcessSet = async (req, res) => {
     // Start transaction
     await pool.query('BEGIN');
 
+    // Delete related simulations first (to handle foreign key constraint)
+    await pool.query(
+      'DELETE FROM simulations WHERE process_set_id = $1',
+      [processSetId]
+    );
+
     // Delete processes
     await pool.query(
       'DELETE FROM processes WHERE process_set_id = $1',

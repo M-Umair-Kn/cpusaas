@@ -7,7 +7,8 @@ const MetricsTable = ({ metrics }) => {
 
   return (
     <div className="metrics-container">
-      <h3>Performance Metrics</h3>
+      <details>
+      <summary>Performance Metrics</summary>
       
       <div className="metrics-summary">
         <div className="metric-card">
@@ -53,6 +54,7 @@ const MetricsTable = ({ metrics }) => {
           ))}
         </tbody>
       </table>
+      </details>
     </div>
   );
 };

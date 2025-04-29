@@ -3,7 +3,6 @@ import { AuthContext } from '../utils/AuthContext';
 import { processApi, simulate } from '../utils/api';
 import ProcessForm from '../components/ProcessForm';
 import GanttChart from '../components/GanttChart';
-import MetricsTable from '../components/MetricsTable';
 import ThemeToggle from '../components/ThemeToggle';
 import AlgorithmComparison from '../components/comparison/AlgorithmComparison';
 
@@ -18,9 +17,30 @@ const Dashboard = () => {
   const [processSetName, setProcessSetName] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [currentTime, setCurrentTime] = useState(0);
   const [showComparison, setShowComparison] = useState(false);
-  const [timeQuantum, setTimeQuantum] = useState(1);
+  const [timeQuantum, setTimeQuantum] = useState(5);
+  const [editingTimeQuantum, setEditingTimeQuantum] = useState(false);
+  // const [currentTime, setCurrentTime] = useState(0); // Add this line to define setCurrentTime
+  const MESSAGE_DURATION = 2200; // 2.2 seconds
+
+    // Add this useEffect to auto-dismiss messages
+    useEffect(() => {
+      let timeoutId;
+      
+      if (message || error) {
+        timeoutId = setTimeout(() => {
+          setMessage('');
+          setError('');
+        }, MESSAGE_DURATION);
+      }
+      
+      // Clean up the timeout when component unmounts or when message/error changes
+      return () => {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+      };
+    }, [message, error]);
 
   // Algorithms
   const algorithms = [
@@ -135,33 +155,15 @@ const Dashboard = () => {
       }
     }
 
-    // Check if time quantum is needed for Round Robin
-    if (selectedAlgorithm === 'RR') {
-      const input = prompt('Enter time quantum for Round Robin:', timeQuantum.toString());
-      if (input === null) {
-        // User canceled the prompt
-        return;
-      }
-
-      const newTimeQuantum = parseFloat(input);
-      if (isNaN(newTimeQuantum) || newTimeQuantum <= 0) {
-        setError('Time quantum must be a positive number');
-        return;
-      }
-      setTimeQuantum(newTimeQuantum);
-    }
-
     try {
-      // Reset current time when starting a new simulation
-      setCurrentTime(0);
-
       const response = await simulate.runSimulation(
         selectedAlgorithm,
         processes,
         selectedProcessSet ? selectedProcessSet.process_set_id : null,
-        selectedAlgorithm === 'RR' ? timeQuantum : undefined
+        selectedAlgorithm === 'RR' ? timeQuantum : null
       );
       setSimulationResult(response.data);
+      console.log(response.data);
       setMessage('Simulation completed successfully');
     } catch (err) {
       setError('Failed to run simulation');
@@ -221,8 +223,8 @@ const Dashboard = () => {
     }
   };
 
-  // Show priority input only for Priority scheduling
-  const showPriority = selectedAlgorithm.includes('Priority');
+  // Temporarily removed as it's always set to true in the ProcessForm below
+  // const showPriority = selectedAlgorithm.includes('Priority');
 
   if (loading) {
     return <div className="loading">Loading...</div>;
@@ -231,7 +233,7 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <h1>CPU Scheduling Simulator</h1>
+        <h1>CPU Scheduling Algorithms Simulator</h1>
         <div className="user-controls">
           <ThemeToggle />
           <p>Welcome, {user?.email}</p>
@@ -272,65 +274,32 @@ const Dashboard = () => {
             </select>
           </div>
 
-          <ProcessForm
-            processes={processes}
-            setProcesses={setProcesses}
-            showPriority={true} // Always show priority for easier algorithm comparison
-          />
-
-          <div className="action-buttons">
-            <button
-              title='Run Simulation'
-              className="btn btn-primary"
-              onClick={runSimulation}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 100 100">
-                <title>Run Simulation</title>
-                <circle cx="50" cy="50" r="48" stroke="black" stroke-width="2" fill="#cce4f7" />
-                <polygon points="40,30 40,70 70,50" fill="#0078d7" />
-              </svg>
-
-            </button>
-            <button
-              title='Save Process Set Data'
-              className="btn btn-success"
-              onClick={() => {
-                setProcessSetName(selectedProcessSet ? selectedProcessSet.name : '');
-                setSaveModalOpen(true);
-              }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                <title>Save Process Set Data</title>
-                <path fill="currentColor" d="M3 2h14l5 5v14a2 2 0 01-2 2H3a2 2 0 01-2-2V4a2 2 0 012-2zm0 2v16h18V8.828L16.172 4H3zm9 11a3 3 0 100-6 3 3 0 000 6zm0-2a1 1 0 110-2 1 1 0 010 2z" />
-              </svg>
-
-            </button>
-            <button
-              title='Clear All Processes'
-              className="btn btn-danger"
-              onClick={clearSimulation}
-            >
-              <svg id="clear-all" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30">
-                <title>Clear All Processes</title>
-                <path fill="currentColor" d="M18.36 5.64l-1.41-1.41L12 9.17 7.05 4.22 5.64 5.64 10.59 10.6 5.64 15.54l1.41 1.41 4.95-4.95 4.95 4.95 1.41-1.41-4.95-4.95 4.95-4.96z" />
-              </svg>
-
-            </button>
-            <button
-              className="btn btn-info"
-              onClick={() => setShowComparison(!showComparison)}
-            >
-              {showComparison ? 'Hide Comparison' : 'Compare Algorithms'}
-            </button>
-            {simulationResult && (
-              <button
-                className="btn btn-secondary"
-                onClick={exportResults}
-              >
-                Export Results
-              </button>
-            )}
-          </div>
+          {selectedAlgorithm === 'RR' && (
+            <div className="time-quantum-selector">
+              <h3>Time Quantum</h3>
+              <div className="time-quantum-input">
+                <input
+                  type="number"
+                  min="1"
+                  step="1"
+                  value={timeQuantum}
+                  onChange={(e) => setTimeQuantum(Number(e.target.value))}
+                  disabled={!editingTimeQuantum}
+                />
+                <button
+                  className={`btn btn-sm ${editingTimeQuantum ? 'btn-primary' : 'btn-warning'}`}
+                  onClick={() => {
+                    if (editingTimeQuantum) {
+                      setMessage(`Time quantum set to ${timeQuantum}`);
+                    }
+                    setEditingTimeQuantum(!editingTimeQuantum);
+                  }}
+                >
+                  {editingTimeQuantum ? 'Save' : 'Edit'}
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className="saved-sets-panel">
             <h3>Saved Process Sets</h3>
@@ -368,21 +337,98 @@ const Dashboard = () => {
               </ul>
             )}
           </div>
+
+          <div className="action-buttons">
+            <button
+              title='Run Simulation'
+              className="btn btn-success"
+              onClick={runSimulation}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 100 100">
+                <title>Run Simulation</title>
+                <circle cx="50" cy="50" r="48" stroke="black" stroke-width="2" fill="#cce4f7" />
+                <polygon points="40,30 40,70 70,50" fill="#0078d7" />
+              </svg>
+
+            </button>
+            <button
+              title='Save Process Set Data'
+              className="btn btn-primary"
+              onClick={() => {
+                setProcessSetName(selectedProcessSet ? selectedProcessSet.name : '');
+                setSaveModalOpen(true);
+              }}
+            >
+              <svg
+                version="1.1"
+                viewBox="0 0 122.73 122.88"
+                enableBackground="new 0 0 122.73 122.88"
+                xmlSpace="preserve"
+                width="1.5rem" height="1.5rem"
+              >
+                <title>Save Process Set Data</title>
+                <path
+                  fill="currentColor"  // Inherits color from parent
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M109.5 113.68l-6.09 0c-.4 0-.73-.32-.73-.72V69.48l0-.1c0-.9-.17-1.65-.49-2.22-.06-.11-.14-.22-.2-.31-.06-.09-.16-.18-.23-.27l-.02-.02c-.3-.3-.68-.53-1.12-.69l-.25-.07-.04-.01-.01 0c-.41-.11-.88-.17-1.38-.17h-.05l-.08 0H36.75c-.89 0-1.62.17-2.18.49l-.02.01-.27.17-.04.04c-.09.07-.18.15-.27.23l-.02.02-.01.01c-.62.63-.92 1.57-.92 2.82l0 .04 0 43.54h0c0 .4-.33.72-.73.72l-9.85 0c-.19 0-.38-.08-.51-.21L9.87 101.41c-.18-.14-.29-.36-.29-.59l0-87.91 0-.08c0-.83.15-1.52.44-2.07 0 0 .05-.11.11-.2l.02-.03c.07-.11.19-.18.25-.29l.01-.02.02-.02c.25-.25.57-.45.92-.59l.04-.02.02-.01.02-.01.18-.06v0l.01-.01c.42-.14.9-.2 1.44-.21l.09-.01 26.21 0c.4 0 .73.32.73.72v28.75c0 .52.05 1.03.13 1.5.09.46.15.98.39 1.34l.01.02v0c.18.44.42.87.67 1.25.24.37.56.77.9 1.13l.02.02.01.01c.48.5.94 1.15 1.62 1.27l.01 0 .01 0 .01.01.32.17.4.18v0l.01 0c.33.14.67.26 1 .34l.01 0 .03 0 .01 0 .03 0 .26.05v0c.45.09.93.14 1.42.14l.02 0h47.8c1.03 0 1.98-.18 2.85-.53l.01-.01c.87-.36 1.67-.9 2.39-1.61l.03-.03c.36-.36.69-.75.96-1.16.26-.38.58-.76.66-1.22l0-.01.01-.01.01-.02c.18-.43.34-.88.41-1.34l0-.03c.09-.47.13-.97.13-1.49V9.92c0-.4.33-.73.73-.73h6c.58 0 1.09.07 1.54.21.48.15.89.39 1.2.7.68.67.88 1.67.9 2.59l.01.09v.05l0 .02v97.19c0 .56-.07 1.07-.21 1.51l-.01.03v0l0 .02-.08.22 0 0-.02.06-.09.2-.01.04-.02.04 0 0-.03.06-.15.22 0 0-.05.08-.14.17-.06.07c-.15.16-.33.3-.53.42-.17.1-.36.19-.55.26l-.06.02c-.16.05-.34.1-.53.14l-.02 0-.01 0-.02 0-.09.01-.02 0 0 0-.02 0c-.22.03-.49.05-.76.06H109.5zM53.93 104.43c-1.66 0-3-1.34-3-3 0-1.66 1.34-3 3-3h31.12c1.66 0 3 1.34 3 3 0 1.66-1.34 3-3 3H53.93zM53.93 89.03c-1.66 0-3-1.34-3-3s1.34-3 3-3h31.12c1.66 0 3 1.34 3 3s-1.34 3-3 3H53.93zM94.03 9.39l-45.32-.2v25.86H48.7c0 .46.06.86.17 1.2.03.06.04.1.07.15.09.23.22.44.4.61l.03.03v0c.06.06.11.1.17.15.06.05.13.09.2.14.39.23.92.34 1.58.34v0l40.1.25v0c.91 0 1.57-.21 1.98-.63.42-.43.63-1.1.63-2.02h0V9.39zM41.91 73.23h53.07v0c.35 0 .65.29.65.64l0 39.17c0 .35-.29.65-.65.65H41.91v0c-.35 0-.65-.29-.65-.64l0-39.17c0-.35.3-.64.65-.64zM9.68 0h104.26c4.91 0 8.79 3.86 8.79 8.79V114c0 4.95-3.9 8.88-8.79 8.88l-96.61 0-.24-.25L1.05 106.6 0 105.9V8.76C0 3.28 4.81 0 9.68 0z"
+                />
+              </svg>
+
+            </button>
+            <button
+              title='Clear All Processes'
+              className="btn btn-danger"
+              onClick={clearSimulation}
+            >
+              <svg id="clear-all" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30">
+                <title>Clear All Processes</title>
+                <path fill="currentColor" d="M18.36 5.64l-1.41-1.41L12 9.17 7.05 4.22 5.64 5.64 10.59 10.6 5.64 15.54l1.41 1.41 4.95-4.95 4.95 4.95 1.41-1.41-4.95-4.95 4.95-4.96z" />
+              </svg>
+
+            </button>
+            <button
+              className="btn btn-info"
+              onClick={() => setShowComparison(!showComparison)}
+            >
+              {showComparison ? 'Hide Comparison' : 'Compare Algorithms'}
+            </button>
+            {simulationResult && (
+              <button
+                className="btn btn-secondary"
+                onClick={exportResults}
+              >
+                Export Results
+              </button>
+            )}
+          </div>
+
+          <ProcessForm
+            processes={processes}
+            setProcesses={setProcesses}
+            showPriority={true} // Always show priority for easier algorithm comparison
+          />
+
         </div>
 
         {showComparison ? (
           <div className="comparison-panel">
-            <AlgorithmComparison processes={processes} />
+            <AlgorithmComparison
+              processes={processes}
+              timeQuantum={timeQuantum}
+            />
           </div>
         ) : (
           <div className="results-panel">
             {simulationResult ? (
               <>
                 <GanttChart
+                  algoName={simulationResult.algoName}
                   gantt={simulationResult.gantt}
-                  onTimeChange={setCurrentTime}
+                  metrics={simulationResult.metrics}
+                  // onTimeChange={setCurrentTime}
                 />
-                <MetricsTable metrics={simulationResult.metrics} />
+                
               </>
             ) : (
               <div className="no-results">

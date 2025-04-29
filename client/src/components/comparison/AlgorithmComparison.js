@@ -21,14 +21,13 @@ ChartJS.register(
   Legend
 );
 
-const AlgorithmComparison = ({ processes }) => {
+const AlgorithmComparison = ({ processes, timeQuantum }) => {
   const [isComparing, setIsComparing] = useState(false);
   const [comparisonResults, setComparisonResults] = useState(null);
   const [comparisonMetrics, setComparisonMetrics] = useState(null);
   const [error, setError] = useState('');
   
   const algorithms = ['FCFS', 'SJF', 'SRTF', 'Priority', 'Priority (Preemptive)', 'RR'];
-  const timeQuantum = 2; // Default time quantum for Round Robin
   
   const runComparison = async () => {
     if (!processes || processes.length === 0) {
@@ -53,7 +52,7 @@ const AlgorithmComparison = ({ processes }) => {
             algorithm, 
             processes, 
             null, 
-            algorithm === 'RR' ? { timeQuantum } : {}
+            algorithm === 'RR' ? timeQuantum : null
           )
         )
       );

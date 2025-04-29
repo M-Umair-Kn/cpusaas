@@ -136,14 +136,21 @@ body {
   transition: all 0.3s ease;
 }
 
+.btn:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px var(--shadow-color);
+}
+
 .btn-primary {
   background-color: var(--accent-color);
   color: #fff;
 }
 
-.btn-primary:hover {
+
+/* .btn-primary:hover {
   background-color: var(--accent-hover);
-}
+} */
 
 .btn-success {
   background-color: var(--success-color);
@@ -310,10 +317,67 @@ body {
 
 /* Dashboard */
 .dashboard {
-  padding: 30px;
+  padding: 15px;
   max-width: 1200px;
   margin: 0 auto;
   background-color: var(--bg-primary);
+}
+
+@media (min-width: 768px) {
+  .dashboard {
+    padding: 30px;
+  }
+}
+
+/* Dashboard Header */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 20px 25px;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px var(--shadow-color);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.user-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 8px;
+}
+
+.user-controls p {
+  margin: 0;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding: 5px 10px;
+  background-color: var(--bg-tertiary);
+  border-radius: 8px;
+}
+
+.logout-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.logout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+/* Dark mode specific adjustments for dashboard header */
+[data-theme="dark"] .dashboard-header {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .user-controls p {
+  background-color: var(--bg-tertiary);
 }
 
 .dashboard h1 {
@@ -326,15 +390,24 @@ body {
   grid-template-columns: 1fr;
   gap: 20px;
   margin-top: 20px;
+  min-width: 80vw; /* Sets minimum width to 80% of viewport width */
+  margin-left: auto;
+  margin-right: auto;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1200px) {
+  .dashboard-grid {
+    min-width: 70vw; /* Slightly smaller minimum on larger screens */
+  }
+}
+
+@media (min-width: 1980px) {
   .dashboard-grid {
     grid-template-columns: 1fr 1fr;
   }
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1992px) {
   .dashboard-grid {
     grid-template-columns: 1fr 1fr 1fr;
   }
@@ -342,12 +415,18 @@ body {
 
 .process-panel,
 .results-panel,
-.saved-sets-panel {
+.comparison-panel{
   margin: 20px 0;
   padding: 20px;
   background-color: var(--bg-secondary);
   border-radius: 8px;
   box-shadow: 0 0 10px var(--shadow-color);
+}
+
+.saved-sets-panel {
+  /* display: flex; */
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .algorithm-selector {
@@ -402,8 +481,32 @@ body {
 }
 
 .gantt-chart-container,
-.metrics-container {
+.metrics-container,
+.process-queues,
+.custom-chart-container {
   margin-bottom: 20px;
+}
+
+.metrics-container,
+.process-queues,
+.custom-chart-container {
+  margin-top: 15px;
+  font-size: large;
+}
+
+.metrics-container summary,
+.process-queues summary,
+.custom-chart-container summary {
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-weight: 700;
+  padding: 5px 0;
+}
+
+.metrics-container summary:hover,
+.process-queues summary:hover,
+.custom-chart-container summary:hover {
+  color: var(--accent-color);
 }
 
 .metrics-summary {
@@ -518,57 +621,6 @@ body {
   background-color: var(--bg-primary);
 }
 
-/* Dashboard Header */
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding: 20px 25px;
-  border-bottom: 1px solid var(--border-color);
-  background-color: var(--bg-secondary);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px var(--shadow-color);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.user-controls {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 8px;
-}
-
-.user-controls p {
-  margin: 0;
-  font-weight: 600;
-  color: var(--text-primary);
-  padding: 5px 10px;
-  background-color: var(--bg-tertiary);
-  border-radius: 8px;
-}
-
-.logout-btn {
-  padding: 8px 16px;
-  font-size: 14px;
-  border-radius: 8px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.logout-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px var(--shadow-color);
-}
-
-/* Dark mode specific adjustments for dashboard header */
-[data-theme="dark"] .dashboard-header {
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
-[data-theme="dark"] .user-controls p {
-  background-color: var(--bg-tertiary);
-}
-
 /* Gantt Chart Animations */
 .gantt-chart-container {
   background-color: var(--bg-secondary);
@@ -587,7 +639,8 @@ body {
   border-bottom: 1px solid var(--border-color);
 }
 
-.custom-chart-container {
+.custom-chart-container,
+.metrics-container {
   margin: 20px 0;
   padding: 10px;
   background-color: var(--chart-bg);
@@ -601,7 +654,7 @@ body {
 .custom-chart-container canvas {
   display: block;
   margin: 0 auto;
-  min-height: 300px;
+  min-height: auto;
   width: 100%;
   height: auto;
 }
@@ -670,16 +723,28 @@ body {
 
 /* Enhanced Animation Controls */
 .animation-controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
+  display: grid;
+  /* align-items: center; */
+  /* justify-content: space-between; */
+  /* gap: 15px; */
   margin: 15px 0;
   padding: 15px;
   background-color: var(--control-bg);
   border-radius: 8px;
   box-shadow: 0 2px 5px var(--shadow-color);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.animation-controls-div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  /* padding: 15px; */
+  /* background-color: var(--control-bg); */
+  /* border-radius: 8px; */
+  /* box-shadow: 0 2px 5px var(--shadow-color); */
+  /* transition: background-color 0.3s ease, box-shadow 0.3s ease; */
 }
 
 .time-controls {
@@ -818,16 +883,42 @@ body {
     padding: 10px;
   }
   
-  .time-display {
-    margin-bottom: 10px;
-  }
-  
-  .control-buttons {
+  .time-controls {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
+    gap: 5px;
     margin-bottom: 10px;
+    width: 100%;
+  }
+  
+  .time-display {
+    margin-bottom: 5px;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .time-display::after {
+    display: none;
+  }
+  
+  .control-button {
+    flex: 1;
+    min-width: 40px;
+    padding: 8px 5px;
+  }
+  
+  .speed-control {
+    margin: 5px 0;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .export-control {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 }
 
@@ -1107,9 +1198,9 @@ body {
 
 /* Process Queues */
 .process-queues {
-  margin-top: 30px;
-  padding: 20px;
-  background-color: var(--bg-tertiary);
+  /* margin-top: 10px; */
+  padding: 10px;
+  background-color: var(--bg-secondary);
   border-radius: 8px;
   box-shadow: 0 2px 5px var(--shadow-color);
 }
@@ -1123,6 +1214,7 @@ body {
 }
 
 .queues-container {
+  margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
@@ -1255,8 +1347,8 @@ body {
     padding: 5px;
   }
   
-  .custom-chart-container canvas {
-    min-width: 1000px; /* Force horizontal scrolling on mobile */
+  .chart-legend {
+    justify-content: center;
   }
 }
 
@@ -1297,8 +1389,9 @@ body {
     padding: 5px;
   }
   
+  /* Removing fixed minimum width that was causing horizontal scrolling */
   .custom-chart-container canvas {
-    min-width: 1000px;
+    min-width: auto;
   }
   
   .chart-legend {
@@ -1590,3 +1683,39 @@ body {
   background-color: var(--bg-secondary);
   color: var(--text-primary);
 }
+
+/* Time Quantum Selector */
+.time-quantum-selector {
+  margin-bottom: 20px;
+  /* padding: 15px; */
+  /* background-color: var(--bg-tertiary); */
+  border-radius: 6px;
+}
+
+.time-quantum-selector h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+.time-quantum-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.time-quantum-input input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  font-size: 14px;
+}
+
+.time-quantum-input button {
+  white-space: nowrap;
+}
+
+

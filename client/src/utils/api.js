@@ -58,12 +58,12 @@ export const processApi = {
 
 // Simulation API calls
 export const simulate = {
-  runSimulation: (algorithm, processes, processSetId = null, additionalParams = {}) => {
+  runSimulation: (algorithm, processes, processSetId = null, timeQuantum = null) => {
     return api.post('/simulate/run', { 
       algorithm, 
       processes, 
       processSetId,
-      ...additionalParams
+      timeQuantum
     });
   },
   getSimulations: () => {

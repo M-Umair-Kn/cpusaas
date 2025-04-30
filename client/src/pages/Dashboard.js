@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, use } from 'react';
 import { AuthContext } from '../utils/AuthContext';
 import { processApi, simulate } from '../utils/api';
 import ProcessForm from '../components/ProcessForm';
@@ -18,29 +18,47 @@ const Dashboard = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [showComparison, setShowComparison] = useState(false);
-  const [timeQuantum, setTimeQuantum] = useState(5);
+  const [timeQuantum, setTimeQuantum] = useState(20);
   const [editingTimeQuantum, setEditingTimeQuantum] = useState(false);
   // const [currentTime, setCurrentTime] = useState(0); // Add this line to define setCurrentTime
   const MESSAGE_DURATION = 2200; // 2.2 seconds
 
-    // Add this useEffect to auto-dismiss messages
-    useEffect(() => {
-      let timeoutId;
-      
-      if (message || error) {
-        timeoutId = setTimeout(() => {
-          setMessage('');
-          setError('');
-        }, MESSAGE_DURATION);
+  // Add this useEffect to auto-dismiss messages
+  useEffect(() => {
+    let timeoutId;
+
+    if (message || error) {
+      timeoutId = setTimeout(() => {
+        setMessage('');
+        setError('');
+      }, MESSAGE_DURATION);
+    }
+
+    // Clean up the timeout when component unmounts or when message/error changes
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
       }
-      
-      // Clean up the timeout when component unmounts or when message/error changes
-      return () => {
-        if (timeoutId) {
-          clearTimeout(timeoutId);
-        }
-      };
-    }, [message, error]);
+    };
+  }, [message, error]);
+
+  // run simulation when user changes selectedAlgorithm during simulation
+  useEffect(() => {
+    if (selectedAlgorithm && simulationResult) {
+      runSimulation().then(() => {
+        setMessage(`Algorithm changed to ${selectedAlgorithm}. New simulation results ready.`);
+      });
+    }
+  }, [selectedAlgorithm]);
+
+  useEffect(() => {
+    if(simulationResult && simulationResult.algoName === 'Round Robin' && selectedAlgorithm === 'RR') {
+      runSimulation().then(() => {
+        setMessage(`Time Quantum is set to ${timeQuantum}. New simulation results ready.`);
+    });
+  }
+  }, [timeQuantum]);
+
 
   // Algorithms
   const algorithms = [
@@ -163,7 +181,6 @@ const Dashboard = () => {
         selectedAlgorithm === 'RR' ? timeQuantum : null
       );
       setSimulationResult(response.data);
-      console.log(response.data);
       setMessage('Simulation completed successfully');
     } catch (err) {
       setError('Failed to run simulation');
@@ -246,61 +263,8 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {(message || error) && (
-        <div className={`alert ${error ? 'alert-danger' : 'alert-success'}`}>
-          {error || message}
-          <button
-            className="close-btn"
-            onClick={() => { setError(''); setMessage(''); }}
-          >
-            &times;
-          </button>
-        </div>
-      )}
-
       <div className="dashboard-grid">
         <div className="process-panel">
-          <div className="algorithm-selector">
-            <h3>Select Algorithm</h3>
-            <select
-              value={selectedAlgorithm}
-              onChange={(e) => setSelectedAlgorithm(e.target.value)}
-            >
-              {algorithms.map(algorithm => (
-                <option key={algorithm} value={algorithm}>
-                  {algorithm}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {selectedAlgorithm === 'RR' && (
-            <div className="time-quantum-selector">
-              <h3>Time Quantum</h3>
-              <div className="time-quantum-input">
-                <input
-                  type="number"
-                  min="1"
-                  step="1"
-                  value={timeQuantum}
-                  onChange={(e) => setTimeQuantum(Number(e.target.value))}
-                  disabled={!editingTimeQuantum}
-                />
-                <button
-                  className={`btn btn-sm ${editingTimeQuantum ? 'btn-primary' : 'btn-warning'}`}
-                  onClick={() => {
-                    if (editingTimeQuantum) {
-                      setMessage(`Time quantum set to ${timeQuantum}`);
-                    }
-                    setEditingTimeQuantum(!editingTimeQuantum);
-                  }}
-                >
-                  {editingTimeQuantum ? 'Save' : 'Edit'}
-                </button>
-              </div>
-            </div>
-          )}
-
           <div className="saved-sets-panel">
             <h3>Saved Process Sets</h3>
             {processSets.length === 0 ? (
@@ -338,6 +302,14 @@ const Dashboard = () => {
             )}
           </div>
 
+
+
+          <ProcessForm
+            processes={processes}
+            setProcesses={setProcesses}
+            showPriority={true} // Always show priority for easier algorithm comparison
+          />
+
           <div className="action-buttons">
             <button
               title='Run Simulation'
@@ -346,7 +318,7 @@ const Dashboard = () => {
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 100 100">
                 <title>Run Simulation</title>
-                <circle cx="50" cy="50" r="48" stroke="black" stroke-width="2" fill="#cce4f7" />
+                <circle cx="50" cy="50" r="48" stroke="black" strokeWidth="2" fill="#cce4f7" />
                 <polygon points="40,30 40,70 70,50" fill="#0078d7" />
               </svg>
 
@@ -401,14 +373,68 @@ const Dashboard = () => {
                 Export Results
               </button>
             )}
+
+            <div className="algorithm-selector">
+              <div className="algorithm-selector-group">
+                <h3>Select Algorithm</h3>
+                <select
+                  value={selectedAlgorithm}
+                  onChange={(e) => {
+                    setSelectedAlgorithm(e.target.value);
+                  }}
+                >
+                  {algorithms.map(algorithm => (
+                    <option key={algorithm} value={algorithm}>
+                      {algorithm}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* {selectedAlgorithm === 'RR' && ( */}
+                <div className="time-quantum-selector">
+                  <h3>Time Quantum</h3>
+                  <div className="time-quantum-input">
+                    <input
+                      type="number"
+                      min="1"
+                      step="1"
+                      value={timeQuantum}
+                      onChange={(e) => setTimeQuantum(Number(e.target.value))}
+                      disabled={!editingTimeQuantum}
+                    />
+                    <button
+                      className={`btn btn-sm ${editingTimeQuantum ? 'btn-primary' : 'btn-warning'}`}
+                      onClick={() => {
+                        if (editingTimeQuantum) {
+                          setMessage(`Time quantum set to ${timeQuantum}`);
+                        }
+                        setEditingTimeQuantum(!editingTimeQuantum);
+                      }}
+                    >
+                      {editingTimeQuantum ? 'Save' : 'Edit'}
+                    </button>
+                  </div>
+                </div>
+               {/* )} */}
+            </div>
+
           </div>
 
-          <ProcessForm
-            processes={processes}
-            setProcesses={setProcesses}
-            showPriority={true} // Always show priority for easier algorithm comparison
-          />
+        </div>
 
+        <div className="message-error">
+          {(message || error) && (
+            <div className={`alert ${error ? 'alert-danger' : 'alert-success'}`}>
+              {error || message}
+              <button
+                className="close-btn"
+                onClick={() => { setError(''); setMessage(''); }}
+              >
+                &times;
+              </button>
+            </div>
+          )}
         </div>
 
         {showComparison ? (
@@ -426,9 +452,9 @@ const Dashboard = () => {
                   algoName={simulationResult.algoName}
                   gantt={simulationResult.gantt}
                   metrics={simulationResult.metrics}
-                  // onTimeChange={setCurrentTime}
+                // onTimeChange={setCurrentTime}
                 />
-                
+
               </>
             ) : (
               <div className="no-results">

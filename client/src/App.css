@@ -133,6 +133,7 @@ body {
   font-size: 14px;
   font-weight: 600;
   text-align: center;
+  justify-content: center;
   transition: all 0.3s ease;
 }
 
@@ -212,7 +213,7 @@ body {
 /* Alerts */
 .alert {
   padding: 10px 15px;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
   border-radius: 4px;
   position: relative;
 }
@@ -414,13 +415,30 @@ body {
 }
 
 .process-panel,
-.results-panel,
-.comparison-panel{
-  margin: 20px 0;
+.results-panel{
+  /* margin: 20px 0; */
   padding: 20px;
   background-color: var(--bg-secondary);
   border-radius: 8px;
   box-shadow: 0 0 10px var(--shadow-color);
+}
+
+.comparison-panel{
+  padding: 10px;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  /* box-shadow: 0 0 10px var(--shadow-color); */
+}
+
+.message-error{
+  height: 20px;
+  margin-bottom: 20px;
+}
+
+.result-panel button,
+.comparison-panel button {
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .saved-sets-panel {
@@ -430,10 +448,14 @@ body {
 }
 
 .algorithm-selector {
-  margin-bottom: 20px;
+  display: flex;
+  /* margin-top: 20px;
+  margin-bottom: 20px; */
+  gap: 10px;
 }
 
-.algorithm-selector select {
+.algorithm-selector select,
+.time-quantum-input input {
   width: 100%;
   padding: 8px;
   border: 1px solid var(--input-border);
@@ -442,6 +464,40 @@ body {
   background-color: var(--input-bg);
   color: var(--input-text);
 }
+
+/* .time-quantum-selector h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+} */
+
+/* Time Quantum Selector */
+.time-quantum-selector {
+  /* margin-bottom: 20px; */
+  /* padding: 15px; */
+  /* background-color: var(--bg-tertiary); */
+  border-radius: 6px;
+}
+
+.time-quantum-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* .time-quantum-input input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  font-size: 14px;
+} */
+
+/* .time-quantum-input button {
+  white-space: nowrap;
+} */
 
 .process-list {
   margin-top: 20px;
@@ -480,7 +536,7 @@ body {
   color: var(--text-secondary);
 }
 
-.gantt-chart-container,
+
 .metrics-container,
 .process-queues,
 .custom-chart-container {
@@ -625,12 +681,13 @@ body {
 .gantt-chart-container {
   background-color: var(--bg-secondary);
   border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 4px 8px var(--shadow-color);
-  margin-bottom: 20px;
+  /* padding: 20px; */
+  /* box-shadow: 0 4px 8px var(--shadow-color); */
+  /* margin-bottom: 20px; */
 }
 
-.gantt-chart-container h3 {
+.gantt-chart-container h3,
+.comparison-panel h3 {
   color: var(--text-primary);
   font-weight: 700;
   margin-bottom: 20px;
@@ -1682,40 +1739,6 @@ body {
 [data-theme="dark"] .time-quantum-control span {
   background-color: var(--bg-secondary);
   color: var(--text-primary);
-}
-
-/* Time Quantum Selector */
-.time-quantum-selector {
-  margin-bottom: 20px;
-  /* padding: 15px; */
-  /* background-color: var(--bg-tertiary); */
-  border-radius: 6px;
-}
-
-.time-quantum-selector h3 {
-  font-size: 16px;
-  margin-bottom: 12px;
-  color: var(--text-primary);
-}
-
-.time-quantum-input {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.time-quantum-input input {
-  flex: 1;
-  padding: 8px;
-  border: 1px solid var(--input-border);
-  border-radius: 4px;
-  background-color: var(--input-bg);
-  color: var(--input-text);
-  font-size: 14px;
-}
-
-.time-quantum-input button {
-  white-space: nowrap;
 }
 
 

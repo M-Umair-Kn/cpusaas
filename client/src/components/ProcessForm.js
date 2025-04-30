@@ -224,6 +224,7 @@ const ProcessForm = ({ processes, setProcesses, showPriority = false }) => {
             {editMode ? 'Save' : (processes.length === 0 ? 'Add' : 'Edit')}
           </button>
         </div>
+        {processes.length !== 0  && (
         <table className="process-table">
           <thead>
             <tr>
@@ -307,7 +308,7 @@ const ProcessForm = ({ processes, setProcesses, showPriority = false }) => {
             )}
           </tbody>
         </table>
-        
+        )}
         {/* Show message when there are no processes and not in edit mode */}
         {processes.length === 0 && !editMode && (
           <div className="no-processes-message" style={{ textAlign: 'center', marginTop: '20px', color: 'var(--text-secondary)' }}>

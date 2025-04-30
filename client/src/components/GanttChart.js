@@ -30,7 +30,7 @@ const GanttChart = ({ algoName, gantt, metrics /*, onTimeChange*/ }) => {
   // Animation state
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [animationSpeed, setAnimationSpeed] = useState(1);
+  const [animationSpeed, setAnimationSpeed] = useState(5);
   const [maxTime, setMaxTime] = useState(0);
   const [processColors, setProcessColors] = useState({});
   const [exportMessage, setExportMessage] = useState('');
@@ -118,7 +118,7 @@ const GanttChart = ({ algoName, gantt, metrics /*, onTimeChange*/ }) => {
 
     // Only show the chart up to the current time plus a small buffer
     // This makes the chart grow dynamically as time progresses
-    const visibleTime = Math.min(currentTime + 2, maxTime);
+    const visibleTime = Math.min(currentTime + 150, maxTime);
 
     // Calculate time scale based on container width and visible time
     const timeWidth = containerWidth - leftMargin - rightMargin;
@@ -224,6 +224,27 @@ const GanttChart = ({ algoName, gantt, metrics /*, onTimeChange*/ }) => {
         ctx.fillRect(startX, y, fullWidth, rowHeight);
         ctx.strokeRect(startX, y, fullWidth, rowHeight);
         ctx.setLineDash([]); // Reset to solid line
+
+        // Add process ID for waiting processes
+        if (fullWidth > 30) {
+          // Process name
+          ctx.fillStyle = themeColors.textColor;
+          ctx.font = `bold 16px ${mainFont}`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(`P${process.pid}`, startX + fullWidth / 2, y + rowHeight / 2 - 15);
+        } else if (fullWidth > 5) {
+          // Just process ID for very small blocks with improved font
+          ctx.save();
+          ctx.translate(startX + fullWidth / 2, y + rowHeight / 2);
+          ctx.rotate(-Math.PI / 2);
+          ctx.fillStyle = themeColors.textColor;
+          ctx.font = `bold 12px ${mainFont}`;
+          ctx.textAlign = 'center';
+          ctx.fillText(`P${process.pid}`, 0, 0);
+          ctx.restore();
+        }
+
       }
 
       // Only draw actual process block if it has started
@@ -506,88 +527,88 @@ const GanttChart = ({ algoName, gantt, metrics /*, onTimeChange*/ }) => {
   }, [togglePlay, stepForward, stepBackward, resetAnimation]);
 
   // Render process queues
-  const renderProcessQueues = () => {
-    if (!gantt || gantt.length === 0) return null;
+  // const renderProcessQueues = () => {
+  //   if (!gantt || gantt.length === 0) return null;
 
-    const waitingProcesses = gantt.filter(entry => currentTime < entry.start)
-      .sort((a, b) => a.start - b.start);
+  //   const waitingProcesses = gantt.filter(entry => currentTime < entry.start)
+  //     .sort((a, b) => a.start - b.start);
 
-    const runningProcesses = gantt.filter(entry => currentTime >= entry.start && currentTime < entry.end);
+  //   const runningProcesses = gantt.filter(entry => currentTime >= entry.start && currentTime < entry.end);
 
-    const completedProcesses = gantt.filter(entry => currentTime >= entry.end)
-      .sort((a, b) => b.end - a.end);
+  //   const completedProcesses = gantt.filter(entry => currentTime >= entry.end)
+  //     .sort((a, b) => b.end - a.end);
 
-    return (
-      <div className="process-queues">
-        <details>
-          <summary>Process Queues</summary>
-          <div className="queues-container">
-            <div className="queue waiting-queue">
-              <h5>Waiting Queue</h5>
-              <div className="queue-items">
-                {waitingProcesses.length > 0 ? (
-                  waitingProcesses.map(entry => (
-                    <div
-                      key={`waiting-${entry.pid}`}
-                      className="queue-item"
-                      style={{ backgroundColor: getProcessColor(entry.pid) }}
-                    >
-                      P{entry.pid}
-                      <span className="queue-item-time">Start: {entry.start}</span>
-                    </div>
-                  ))
-                ) : (
-                  <div className="empty-queue">No waiting processes</div>
-                )}
-              </div>
-            </div>
+  //   return (
+  //     <div className="process-queues">
+  //       <details>
+  //         <summary>Process Queues</summary>
+  //         <div className="queues-container">
+  //           <div className="queue waiting-queue">
+  //             <h5>Waiting Queue</h5>
+  //             <div className="queue-items">
+  //               {waitingProcesses.length > 0 ? (
+  //                 waitingProcesses.map(entry => (
+  //                   <div
+  //                     key={`waiting-${entry.pid}`}
+  //                     className="queue-item"
+  //                     style={{ backgroundColor: getProcessColor(entry.pid) }}
+  //                   >
+  //                     P{entry.pid}
+  //                     <span className="queue-item-time">Start: {entry.start}</span>
+  //                   </div>
+  //                 ))
+  //               ) : (
+  //                 <div className="empty-queue">No waiting processes</div>
+  //               )}
+  //             </div>
+  //           </div>
 
-            <div className="queue running-queue">
-              <h5>Running Queue</h5>
-              <div className="queue-items">
-                {runningProcesses.length > 0 ? (
-                  runningProcesses.map(entry => (
-                    <div
-                      key={`running-${entry.pid}`}
-                      className="queue-item running"
-                      style={{ backgroundColor: getProcessColor(entry.pid) }}
-                    >
-                      P{entry.pid}
-                      <span className="queue-item-time">
-                        Progress: {Math.round((currentTime - entry.start) / (entry.end - entry.start) * 100)}%
-                      </span>
-                    </div>
-                  ))
-                ) : (
-                  <div className="empty-queue">No running processes</div>
-                )}
-              </div>
-            </div>
+  //           <div className="queue running-queue">
+  //             <h5>Running Queue</h5>
+  //             <div className="queue-items">
+  //               {runningProcesses.length > 0 ? (
+  //                 runningProcesses.map(entry => (
+  //                   <div
+  //                     key={`running-${entry.pid}`}
+  //                     className="queue-item running"
+  //                     style={{ backgroundColor: getProcessColor(entry.pid) }}
+  //                   >
+  //                     P{entry.pid}
+  //                     <span className="queue-item-time">
+  //                       Progress: {Math.round((currentTime - entry.start) / (entry.end - entry.start) * 100)}%
+  //                     </span>
+  //                   </div>
+  //                 ))
+  //               ) : (
+  //                 <div className="empty-queue">No running processes</div>
+  //               )}
+  //             </div>
+  //           </div>
 
-            <div className="queue completed-queue">
-              <h5>Completed Queue</h5>
-              <div className="queue-items">
-                {completedProcesses.length > 0 ? (
-                  completedProcesses.map(entry => (
-                    <div
-                      key={`completed-${entry.pid}`}
-                      className="queue-item completed"
-                      style={{ backgroundColor: getProcessColor(entry.pid) }}
-                    >
-                      P{entry.pid}
-                      <span className="queue-item-time">End: {entry.end}</span>
-                    </div>
-                  ))
-                ) : (
-                  <div className="empty-queue">No completed processes</div>
-                )}
-              </div>
-            </div>
-          </div>
-        </details>
-      </div>
-    );
-  };
+  //           <div className="queue completed-queue">
+  //             <h5>Completed Queue</h5>
+  //             <div className="queue-items">
+  //               {completedProcesses.length > 0 ? (
+  //                 completedProcesses.map(entry => (
+  //                   <div
+  //                     key={`completed-${entry.pid}`}
+  //                     className="queue-item completed"
+  //                     style={{ backgroundColor: getProcessColor(entry.pid) }}
+  //                   >
+  //                     P{entry.pid}
+  //                     <span className="queue-item-time">End: {entry.end}</span>
+  //                   </div>
+  //                 ))
+  //               ) : (
+  //                 <div className="empty-queue">No completed processes</div>
+  //               )}
+  //             </div>
+  //           </div>
+  //         </div>
+  //       </details>
+  //     </div>
+  //   );
+  // };
 
   // Render time slider
   const renderTimeSlider = () => {
@@ -614,7 +635,7 @@ const GanttChart = ({ algoName, gantt, metrics /*, onTimeChange*/ }) => {
     <div className="gantt-chart-container" ref={containerRef}>
       <h3>Simulation - {algoName}</h3>
       <div className="custom-chart-container">
-        <details>
+        <details open>
           <summary>
             CPU Scheduling Gantt Chart
           </summary>
@@ -742,10 +763,10 @@ const GanttChart = ({ algoName, gantt, metrics /*, onTimeChange*/ }) => {
               }}></div>
               <div className="legend-label">Not Started</div>
             </div>
-            <div className="legend-item">
+            {/* <div className="legend-item">
               <div className="legend-color" style={{ backgroundColor: '#4ECDC4' }}></div>
               <div className="legend-label">Completed</div>
-            </div>
+            </div> */}
             <div className="legend-item">
               <div className="legend-color" style={{
                 backgroundColor: 'transparent',
@@ -771,7 +792,7 @@ const GanttChart = ({ algoName, gantt, metrics /*, onTimeChange*/ }) => {
       </div>
 
       {/* Process Queues */}
-      {renderProcessQueues()}
+      {/* {renderProcessQueues()} */}
       <MetricsTable metrics={metrics} />
     </div>
   );

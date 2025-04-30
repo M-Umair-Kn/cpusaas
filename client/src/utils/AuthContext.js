@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await auth.login(email, password);
       localStorage.setItem('token', response.data.token);
-      loadUserProfile();
+      await loadUserProfile();
       return response;
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');

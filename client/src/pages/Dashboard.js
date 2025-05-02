@@ -18,7 +18,7 @@ const Dashboard = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [showComparison, setShowComparison] = useState(false);
-  const [timeQuantum, setTimeQuantum] = useState(20);
+  const [timeQuantum, setTimeQuantum] = useState(90);
   const [editingTimeQuantum, setEditingTimeQuantum] = useState(false);
   // const [currentTime, setCurrentTime] = useState(0); // Add this line to define setCurrentTime
   const MESSAGE_DURATION = 2200; // 2.2 seconds

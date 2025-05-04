@@ -8,7 +8,7 @@ const MetricsTable = ({ metrics, algoName }) => {
   return (
     <div className="metrics-container">
       <details>
-      <summary>{algoName} - Performance Metrics</summary>
+      <summary>Performance Metrics - {algoName}</summary>
       
       <div className="metrics-summary">
         <div className="metric-card">

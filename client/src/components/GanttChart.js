@@ -634,11 +634,12 @@ const GanttChart = ({ algoName, gantt, metrics /*, onTimeChange*/ }) => {
 
   return (
     <div className="gantt-chart-container" ref={containerRef}>
-      <h3>Simulation - {algoName}</h3>
+      <details>
+        <summary className="simulation-header">Simulation - {algoName}</summary>
       <div className="custom-chart-container">
         <details open>
           <summary>
-          {algoName} - Gantt Chart
+          Gantt Chart - {algoName}
           </summary>
 
           <div className="animation-controls">
@@ -798,6 +799,7 @@ const GanttChart = ({ algoName, gantt, metrics /*, onTimeChange*/ }) => {
         metrics={metrics}
         algoName={algoName}
         />
+      </details>
     </div>
   );
 };

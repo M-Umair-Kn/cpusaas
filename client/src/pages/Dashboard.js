@@ -11,8 +11,8 @@ const Dashboard = () => {
   const [processes, setProcesses] = useState([]);
   const [processSets, setProcessSets] = useState([]);
   const [selectedProcessSet, setSelectedProcessSet] = useState(null);
-  const [selectedAlgorithm, setSelectedAlgorithm] = useState('FCFS');
-  const [simulationResult, setSimulationResult] = useState(null);
+  const [selectedAlgorithms, setSelectedAlgorithms] = useState(['FCFS']); // Changed to array for multiple selection
+  const [simulationResults, setSimulationResults] = useState([]); // Changed to array for multiple results
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [processSetName, setProcessSetName] = useState('');
   const [message, setMessage] = useState('');
@@ -20,7 +20,7 @@ const Dashboard = () => {
   const [showComparison, setShowComparison] = useState(false);
   const [timeQuantum, setTimeQuantum] = useState(90);
   const [editingTimeQuantum, setEditingTimeQuantum] = useState(false);
-  // const [currentTime, setCurrentTime] = useState(0); // Add this line to define setCurrentTime
+  const [isAlgorithmDropdownOpen, setIsAlgorithmDropdownOpen] = useState(false); // For dropdown toggle
   const MESSAGE_DURATION = 2200; // 2.2 seconds
 
   // Add this useEffect to auto-dismiss messages
@@ -44,21 +44,20 @@ const Dashboard = () => {
 
   // run simulation when user changes selectedAlgorithm during simulation
   useEffect(() => {
-    if (selectedAlgorithm && simulationResult) {
-            runSimulation().then(() => {
-        setMessage(`Algorithm changed to ${selectedAlgorithm}. New simulation results ready.`);
+    if (selectedAlgorithms.length && simulationResults.length) {
+      runSimulation().then(() => {
+        setMessage(`Algorithms changed to ${selectedAlgorithms.join(', ')}. New simulation results ready.`);
       });
     }
-  }, [selectedAlgorithm]);
+  }, [selectedAlgorithms]);
 
   useEffect(() => {
-    if(simulationResult && simulationResult.algoName === 'Round Robin' && selectedAlgorithm === 'RR') {
+    if (simulationResults.length && selectedAlgorithms.includes('RR')) {
       runSimulation().then(() => {
         setMessage(`Time Quantum is set to ${timeQuantum}. New simulation results ready.`);
-    });
-  }
+      });
+    }
   }, [timeQuantum]);
-
 
   // Algorithms
   const algorithms = [
@@ -165,7 +164,7 @@ const Dashboard = () => {
     }
 
     // Check if priority is required
-    if (selectedAlgorithm.includes('Priority')) {
+    if (selectedAlgorithms.some(algo => algo.includes('Priority'))) {
       const missingPriority = processes.some(p => p.priority === null || p.priority === undefined);
       if (missingPriority) {
         setError('All processes must have a priority value for Priority scheduling');
@@ -174,13 +173,18 @@ const Dashboard = () => {
     }
 
     try {
-      const response = await simulate.runSimulation(
-        selectedAlgorithm,
-        processes,
-        selectedProcessSet ? selectedProcessSet.process_set_id : null,
-        selectedAlgorithm === 'RR' ? timeQuantum : null
+      const results = await Promise.all(
+        selectedAlgorithms.map(async (algorithm) => {
+          const response = await simulate.runSimulation(
+            algorithm,
+            processes,
+            selectedProcessSet ? selectedProcessSet.process_set_id : null,
+            algorithm === 'RR' ? timeQuantum : null
+          );
+          return response.data;
+        })
       );
-      setSimulationResult(response.data);
+      setSimulationResults(results);
       setMessage('Simulation completed successfully');
     } catch (err) {
       setError('Failed to run simulation');
@@ -192,46 +196,48 @@ const Dashboard = () => {
   const clearSimulation = () => {
     setProcesses([]);
     setSelectedProcessSet(null);
-    setSimulationResult(null);
+    setSimulationResults([]);
     setMessage('Cleared all processes and simulation results');
   };
 
   // Export simulation results
   const exportResults = () => {
-    if (!simulationResult) {
+    if (!simulationResults.length) {
       setError('No simulation results to export');
       return;
     }
 
     try {
-      // Create CSV content for process details
-      let csvContent = 'Process ID,Waiting Time,Turnaround Time,Response Time\n';
+      simulationResults.forEach((simulationResult) => {
+        // Create CSV content for process details
+        let csvContent = 'Process ID,Waiting Time,Turnaround Time,Response Time\n';
 
-      const metrics = simulationResult.metrics;
-      const processPids = Object.keys(metrics.processMetrics);
+        const metrics = simulationResult.metrics;
+        const processPids = Object.keys(metrics.processMetrics);
 
-      processPids.forEach(pid => {
-        const process = metrics.processMetrics[pid];
-        csvContent += `${pid},${process.waitingTime.toFixed(2)},${process.turnaroundTime.toFixed(2)},${process.responseTime.toFixed(2)}\n`;
+        processPids.forEach(pid => {
+          const process = metrics.processMetrics[pid];
+          csvContent += `${pid},${process.waitingTime.toFixed(2)},${process.turnaroundTime.toFixed(2)},${process.responseTime.toFixed(2)}\n`;
+        });
+
+        // Add overall metrics
+        csvContent += '\nOverall Metrics\n';
+        csvContent += `Average Waiting Time,${metrics.averageWaitingTime.toFixed(2)}\n`;
+        csvContent += `Average Turnaround Time,${metrics.averageTurnaroundTime.toFixed(2)}\n`;
+        csvContent += `Average Response Time,${metrics.averageResponseTime.toFixed(2)}\n`;
+        csvContent += `CPU Utilization,${metrics.cpuUtilization.toFixed(2)}%\n`;
+        csvContent += `Throughput,${metrics.throughput.toFixed(4)} proc/unit\n`;
+
+        // Create and download the CSV file
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${simulationResult.algoName}_simulation_results.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       });
-
-      // Add overall metrics
-      csvContent += '\nOverall Metrics\n';
-      csvContent += `Average Waiting Time,${metrics.averageWaitingTime.toFixed(2)}\n`;
-      csvContent += `Average Turnaround Time,${metrics.averageTurnaroundTime.toFixed(2)}\n`;
-      csvContent += `Average Response Time,${metrics.averageResponseTime.toFixed(2)}\n`;
-      csvContent += `CPU Utilization,${metrics.cpuUtilization.toFixed(2)}%\n`;
-      csvContent += `Throughput,${metrics.throughput.toFixed(4)} proc/unit\n`;
-
-      // Create and download the CSV file
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `${selectedAlgorithm}_simulation_results.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
 
       setMessage('Results exported successfully');
     } catch (err) {
@@ -239,9 +245,6 @@ const Dashboard = () => {
       console.error(err);
     }
   };
-
-  // Temporarily removed as it's always set to true in the ProcessForm below
-  // const showPriority = selectedAlgorithm.includes('Priority');
 
   if (loading) {
     return <div className="loading">Loading...</div>;
@@ -301,8 +304,6 @@ const Dashboard = () => {
               </ul>
             )}
           </div>
-
-
 
           <ProcessForm
             processes={processes}
@@ -365,7 +366,7 @@ const Dashboard = () => {
             >
               {showComparison ? 'Hide Comparison' : 'Compare Algorithms'}
             </button>
-            {simulationResult && (
+            {simulationResults.length > 0 && (
               <button
                 className="btn btn-secondary"
                 onClick={exportResults}
@@ -376,55 +377,75 @@ const Dashboard = () => {
 
             <div className="algorithm-selector">
               <div className="algorithm-selector-group">
-                <h3>Select Algorithm</h3>
-                <select
-                  value={selectedAlgorithm}
-                  onChange={(e) => {
-                    setSelectedAlgorithm(e.target.value);
-                  }}
-                >
-                  {algorithms.map(algorithm => (
-                    <option key={algorithm} value={algorithm}>
-                      {algorithm}
-                    </option>
-                  ))}
-                </select>
+                <h3>Select Algorithms</h3>
+                <div className="dropdown">
+                  <button
+                    className="btn btn-secondary dropdown-toggle"
+                    onClick={() => setIsAlgorithmDropdownOpen(!isAlgorithmDropdownOpen)}
+                  >
+                    {selectedAlgorithms.length > 0 ? 
+                      `Selected Algorithms (${selectedAlgorithms.length})` : 
+                      'Select Algorithms'}
+                  </button>
+                  {isAlgorithmDropdownOpen && (
+                    <div className="dropdown-menu">
+                      {algorithms.map(algorithm => (
+                        <div key={algorithm} className="dropdown-item">
+                          <input
+                            type="checkbox"
+                            id={`algo-${algorithm}`}
+                            checked={selectedAlgorithms.includes(algorithm)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedAlgorithms([...selectedAlgorithms, algorithm]);
+                              } else {
+                                // Don't allow removing the last algorithm
+                                if (selectedAlgorithms.length > 1) {
+                                  setSelectedAlgorithms(selectedAlgorithms.filter(algo => algo !== algorithm));
+                                }
+                              }
+                            }}
+                          />
+                          <label htmlFor={`algo-${algorithm}`}>{algorithm}</label>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
 
-              {/* {selectedAlgorithm === 'RR' && ( */}
-                <div className="time-quantum-selector">
-                  <h3>Time Quantum</h3>
-                  <div className="time-quantum-input">
-                    <input
-                      type="number"
-                      min="1"
-                      step="1"
-                      value={timeQuantum}
-                      onChange={(e) => {
-                        const value = Number(e.target.value);
-                        if (value >= 1) {
-                          setTimeQuantum(value);
-                        } else {
-                          setTimeQuantum(1);
-                          setError("Time quantum must be at least 1");
-                        }
-                      }}
-                      disabled={!editingTimeQuantum}
-                    />
-                    <button
-                      className={`btn btn-sm ${editingTimeQuantum ? 'btn-primary' : 'btn-warning'}`}
-                      onClick={() => {
-                        if (editingTimeQuantum) {
-                          setMessage(`Time quantum set to ${timeQuantum}`);
-                        }
-                        setEditingTimeQuantum(!editingTimeQuantum);
-                      }}
-                    >
-                      {editingTimeQuantum ? 'Save' : 'Edit'}
-                    </button>
-                  </div>
+              <div className="time-quantum-selector">
+                <h3>Time Quantum</h3>
+                <div className="time-quantum-input">
+                  <input
+                    type="number"
+                    min="1"
+                    step="1"
+                    value={timeQuantum}
+                    onChange={(e) => {
+                      const value = Number(e.target.value);
+                      if (value >= 1) {
+                        setTimeQuantum(value);
+                      } else {
+                        setTimeQuantum(1);
+                        setError("Time quantum must be at least 1");
+                      }
+                    }}
+                    disabled={!editingTimeQuantum}
+                  />
+                  <button
+                    className={`btn btn-sm ${editingTimeQuantum ? 'btn-primary' : 'btn-warning'}`}
+                    onClick={() => {
+                      if (editingTimeQuantum) {
+                        setMessage(`Time quantum set to ${timeQuantum}`);
+                      }
+                      setEditingTimeQuantum(!editingTimeQuantum);
+                    }}
+                  >
+                    {editingTimeQuantum ? 'Save' : 'Edit'}
+                  </button>
                 </div>
-               {/* )} */}
+              </div>
             </div>
 
           </div>
@@ -454,16 +475,15 @@ const Dashboard = () => {
           </div>
         ) : (
           <div className="results-panel">
-            {simulationResult ? (
-              <>
+            {simulationResults.length > 0 ? (
+              simulationResults.map((simulationResult, index) => (
                 <GanttChart
+                  key={index}
                   algoName={simulationResult.algoName}
                   gantt={simulationResult.gantt}
                   metrics={simulationResult.metrics}
-                // onTimeChange={setCurrentTime}
                 />
-
-              </>
+              ))
             ) : (
               <div className="no-results">
                 <p>No simulation results to display.</p>
@@ -472,7 +492,6 @@ const Dashboard = () => {
             )}
           </div>
         )}
-
 
       </div>
 

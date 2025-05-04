@@ -18,7 +18,7 @@ const ProcessForm = ({ processes, setProcesses, showPriority = false, isGuest = 
 
   const [newProcess, setNewProcess] = useState({ ...initialProcessState });
   const [error, setError] = useState('');
-  const [editMode, setEditMode] = useState(processes.length === 0 || isGuest);
+  const [editMode, setEditMode] = useState(isGuest);
   const [processesInEdit, setProcessesInEdit] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: 'pid', direction: 'ascending' });
   const [sortedProcesses, setSortedProcesses] = useState([...processes]);
@@ -268,13 +268,14 @@ const ProcessForm = ({ processes, setProcesses, showPriority = false, isGuest = 
               {editMode ? 'Save' : (processes.length === 0 ? 'Add' : 'Edit')}
             </button>
           )}
+          
           {isGuest && (
             <button 
               title='Save Changes'
               className="btn btn-success btn-sm"
               onClick={saveChanges}
             >
-              Save
+              Update
             </button>
           )}
         </div>

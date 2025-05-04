@@ -454,13 +454,6 @@ body {
   margin-top: 20px;
 }
 
-.algorithm-selector {
-  display: flex;
-  /* margin-top: 20px;
-  margin-bottom: 20px; */
-  gap: 10px;
-}
-
 .algorithm-selector select,
 .time-quantum-input input {
   width: 100%;
@@ -1856,7 +1849,7 @@ body {
 .algorithm-selector-group,
 .time-quantum-selector {
   flex: 1;
-  min-width: 200px;
+  /* min-width: 200px; */
 }
 
 .algorithm-selector-group h3,
@@ -1881,4 +1874,14 @@ body {
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
 }
 
-
+.process-form-actions{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding: 10px;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  gap: 20px;
+  /* box-shadow: 0 2px 5px var(--shadow-color); */
+}

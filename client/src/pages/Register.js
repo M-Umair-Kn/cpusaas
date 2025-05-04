@@ -10,7 +10,7 @@ const Register = () => {
     confirmPassword: '',
   });
   const [formError, setFormError] = useState('');
-  const { register, error, clearError } = useContext(AuthContext);
+  const { register, loginAsGuest, error, clearError } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const { email, password, confirmPassword } = formData;
@@ -45,6 +45,11 @@ const Register = () => {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const handleGuestLogin = () => {
+    loginAsGuest();
+    navigate('/dashboard');
   };
 
   return (
@@ -103,6 +108,15 @@ const Register = () => {
           <button type="submit" className="btn btn-primary">
             Register
           </button>
+          
+          <button 
+            type="button" 
+            className="btn btn-secondary guest-btn"
+            onClick={handleGuestLogin}
+            style={{ marginTop: '10px' }}
+          >
+            Continue as Guest
+          </button>
         </form>
 
         <p className="login-link">
@@ -113,4 +127,4 @@ const Register = () => {
   );
 };
 
-export default Register; 
+export default Register;

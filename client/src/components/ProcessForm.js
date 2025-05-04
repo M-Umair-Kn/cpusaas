@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const ProcessForm = ({ processes, setProcesses, showPriority = false }) => {
+const ProcessForm = ({ processes, setProcesses, showPriority = false, isGuest = false }) => {
   // Define fields configuration for reuse
   const processFields = [
     { name: 'pid', label: 'Process ID', type: 'text', min: null, placeholder: 'e.g., P1' },
@@ -18,10 +18,17 @@ const ProcessForm = ({ processes, setProcesses, showPriority = false }) => {
 
   const [newProcess, setNewProcess] = useState({ ...initialProcessState });
   const [error, setError] = useState('');
-  const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState(processes.length === 0 || isGuest);
   const [processesInEdit, setProcessesInEdit] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: 'pid', direction: 'ascending' });
   const [sortedProcesses, setSortedProcesses] = useState([...processes]);
+
+  // Automatically set edit mode for guest users
+  useEffect(() => {
+    if (isGuest) {
+      setEditMode(true);
+    }
+  }, [isGuest]);
 
   // Update sorted processes when processes change or sort config changes
   useEffect(() => {
@@ -64,7 +71,7 @@ const ProcessForm = ({ processes, setProcesses, showPriority = false }) => {
     setSortedProcesses(sortableProcesses);
   }, [processes, sortConfig]);
 
-  // Initialize editable processes when entering edit mode
+  // Initialize editable processes when entering edit mode or when processes change
   useEffect(() => {
     if (editMode) {
       // Create a deep copy of sorted processes for editing to maintain sort order
@@ -109,8 +116,8 @@ const ProcessForm = ({ processes, setProcesses, showPriority = false }) => {
     setProcessesInEdit(updatedProcesses);
   };
 
-  // Consolidated validation function
-  const validateProcess = (data) => {
+  // Validation function for new processes
+  const validateNewProcess = (data) => {
     if (!data.pid) {
       setError('Process ID is required');
       return false;
@@ -140,55 +147,88 @@ const ProcessForm = ({ processes, setProcesses, showPriority = false }) => {
     return true;
   };
 
+  // Validation function for process edits
+  const validateProcessEdits = (editedProcesses) => {
+    if (editedProcesses.length === 0) {
+      return true; // No processes to validate
+    }
+
+    const pidSet = new Set();
+    
+    for (const process of editedProcesses) {
+      if (!process.pid) {
+        setError('Process ID is required for all processes');
+        return false;
+      }
+      
+      if (process.arrival_time < 0) {
+        setError('Arrival time cannot be negative');
+        return false;
+      }
+
+      if (process.burst_time <= 0) {
+        setError('Burst time must be greater than 0');
+        return false;
+      }
+
+      if (showPriority && (process.priority === null || process.priority < 0)) {
+        setError('Priority must be a non-negative number');
+        return false;
+      }
+
+      // Check for duplicate PIDs within the edited processes
+      if (pidSet.has(process.pid)) {
+        setError('Duplicate Process IDs are not allowed');
+        return false;
+      }
+      pidSet.add(process.pid);
+    }
+    
+    return true;
+  };
+
   const handleAddProcess = () => {
-    if (!validateProcess(newProcess)) return;
+    if (!validateNewProcess(newProcess)) return;
 
     // Add process to list
-    setProcesses([...processes, newProcess]);
+    const updatedProcesses = [...processes, newProcess];
+    setProcesses(updatedProcesses);
 
     // Reset form
     setNewProcess({ ...initialProcessState });
   };
 
   const removeProcess = (index) => {
-    setProcessesInEdit(prevProcesses => 
-      prevProcesses.filter((_, idx) => idx !== index)
-    );
+    const updatedProcesses = [...processesInEdit];
+    updatedProcesses.splice(index, 1);
+    setProcessesInEdit(updatedProcesses);
+    
+    // For guest users, apply the changes immediately so they're reflected in the simulation
+    if (isGuest) {
+      setProcesses(updatedProcesses);
+    }
+  };
+
+  const saveChanges = () => {
+    // Validate all processes
+    if (!validateProcessEdits(processesInEdit)) {
+      return; // Validation failed
+    }
+    
+    // Save all changes by updating the parent component's state
+    setProcesses([...processesInEdit]);
+    setError('');
+    
+    // Always keep edit mode on for guest users
+    if (!isGuest) {
+      setEditMode(false);
+    }
   };
 
   const toggleEditMode = () => {
     if (editMode) {
       // We are saving changes
-      // Validate all processes
-      let hasError = false;
-      
-      // Only validate if there are processes to validate
-      if (processesInEdit.length > 0) {
-        for (const process of processesInEdit) {
-          if (!validateProcess(process)) {
-            hasError = true;
-            break;
-          }
-        }
-
-        // Check for duplicate PIDs
-        const pidSet = new Set();
-        for (const process of processesInEdit) {
-          if (pidSet.has(process.pid)) {
-            setError('Duplicate Process IDs are not allowed');
-            hasError = true;
-            break;
-          }
-          pidSet.add(process.pid);
-        }
-      }
-
-      if (!hasError) {
-        // Save all changes
-        setProcesses([...processesInEdit]);
-        setEditMode(false);
-        setError('');
-      }
+      saveChanges();
     } else {
       // We are entering edit mode
       setEditMode(true);
@@ -215,16 +255,32 @@ const ProcessForm = ({ processes, setProcesses, showPriority = false }) => {
       
       <div className="process-list">
         <div className="header-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-          <h3>Processes</h3>
-          <button 
-            title={editMode ? 'Save Changes' : (processes.length === 0 ? 'Add Process' : 'Edit All Processes')}
-            className={`btn ${editMode ? 'btn-success' : (processes.length === 0 ? 'btn-primary' : 'btn-warning')} btn-sm`}
-            onClick={toggleEditMode}
-          >
-            {editMode ? 'Save' : (processes.length === 0 ? 'Add' : 'Edit')}
-          </button>
+          <h3>
+            Processes
+            {isGuest && <span className="guest-badge" style={{ marginLeft: '10px', fontSize: '0.8em', color: '#666', fontWeight: 'normal' }}>(Guest Mode)</span>}
+          </h3>
+          {!isGuest && (
+            <button 
+              title={editMode ? 'Save Changes' : (processes.length === 0 ? 'Add Process' : 'Edit All Processes')}
+              className={`btn ${editMode ? 'btn-success' : (processes.length === 0 ? 'btn-primary' : 'btn-warning')} btn-sm`}
+              onClick={toggleEditMode}
+            >
+              {editMode ? 'Save' : (processes.length === 0 ? 'Add' : 'Edit')}
+            </button>
+          )}
+          {isGuest && (
+            <button 
+              title='Save Changes'
+              className="btn btn-success btn-sm"
+              onClick={saveChanges}
+            >
+              Save
+            </button>
+          )}
         </div>
-        {processes.length !== 0  && (
+        
+        {/* Always show the form for guest users even when no processes exist */}
+        {(processes.length !== 0 || editMode || isGuest) && (
         <table className="process-table">
           <thead>
             <tr>
@@ -242,9 +298,9 @@ const ProcessForm = ({ processes, setProcesses, showPriority = false }) => {
             </tr>
           </thead>
           <tbody>
-            {/* Show Add process row only in edit mode */}
+            {/* Show Add process row when in edit mode */}
             {editMode && (
-              <tr>
+              <tr className="new-process-row">
                 {processFields.map(field => (
                   <td key={field.name}>
                     {renderInputField(field, newProcess[field.name], handleNewProcessChange)}
@@ -268,7 +324,7 @@ const ProcessForm = ({ processes, setProcesses, showPriority = false }) => {
             {editMode ? (
               // Show editable processes in edit mode
               processesInEdit.map((p, index) => (
-                <tr key={index}>
+                <tr key={index} className="edit-process-row">
                   {processFields.map(field => (
                     <td key={field.name}>
                       {renderInputField(
@@ -309,10 +365,18 @@ const ProcessForm = ({ processes, setProcesses, showPriority = false }) => {
           </tbody>
         </table>
         )}
-        {/* Show message when there are no processes and not in edit mode */}
-        {processes.length === 0 && !editMode && (
+        
+        {/* Message when no processes and not in edit mode (but hidden for guest users) */}
+        {processes.length === 0 && !editMode && !isGuest && (
           <div className="no-processes-message" style={{ textAlign: 'center', marginTop: '20px', color: 'var(--text-secondary)' }}>
             No processes added yet. Click the "Add" button to get started.
+          </div>
+        )}
+        
+        {/* Special guidance for guest users */}
+        {isGuest && processes.length === 0 && (
+          <div className="guest-guidance" style={{ textAlign: 'center', marginTop: '10px', color: 'var(--accent-color)' }}>
+            <p>Add processes above to run simulations. Guest users can create and edit processes but cannot save them to the database.</p>
           </div>
         )}
       </div>

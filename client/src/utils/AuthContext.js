@@ -7,11 +7,21 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isGuest, setIsGuest] = useState(false);
 
   // Load user on initial render
   useEffect(() => {
     const loadUser = async () => {
       try {
+        // Check if user is logged in as guest
+        const guestMode = localStorage.getItem('guestMode');
+        if (guestMode === 'true') {
+          setUser({ email: 'guest@cpusaas.com', isGuest: true });
+          setIsGuest(true);
+          setLoading(false);
+          return;
+        }
+
         const token = localStorage.getItem('token');
         if (!token) {
           setLoading(false);
@@ -57,6 +67,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Guest login
+  const loginAsGuest = () => {
+    localStorage.setItem('guestMode', 'true');
+    setUser({ email: 'guest@cpusaas.com', isGuest: true });
+    setIsGuest(true);
+    return { success: true };
+  };
+
   // Load user profile
   const loadUserProfile = async () => {
     try {
@@ -73,7 +91,9 @@ export const AuthProvider = ({ children }) => {
   // Logout user
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('guestMode');
     setUser(null);
+    setIsGuest(false);
   };
 
   // Clear error
@@ -91,9 +111,11 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         clearError,
+        loginAsGuest,
+        isGuest
       }}
     >
       {children}
     </AuthContext.Provider>
   );
-}; 
+};

@@ -458,7 +458,6 @@ const roundRobin = (processes, timeQuantum = 1) => {
 // Run simulation
 export const runSimulation = async (req, res) => {
   const { algorithm, processes, processSetId, timeQuantum } = req.body;
-  const userId = req.user.id;
 
   try {
     let result;
@@ -487,8 +486,9 @@ export const runSimulation = async (req, res) => {
         return res.status(400).json({ message: 'Algorithm not supported' });
     }
 
-    // Store simulation results if processSetId is provided
-    if (processSetId) {
+    // Store simulation results if processSetId is provided and user is not a guest
+    if (processSetId && !req.user.isGuest) {
+      const userId = req.user.id;
       const client = await pool.connect();
       try {
         await client.query('BEGIN');
@@ -513,6 +513,11 @@ export const runSimulation = async (req, res) => {
 
 // Get simulations for a user
 export const getSimulations = async (req, res) => {
+  // Return empty array for guest users
+  if (req.user.isGuest) {
+    return res.json([]);
+  }
+  
   try {
     const simulations = await pool.query(
       'SELECT s.*, ps.name as process_set_name FROM simulations s ' +
@@ -530,6 +535,11 @@ export const getSimulations = async (req, res) => {
 
 // Get a specific simulation
 export const getSimulation = async (req, res) => {
+  // Guest users cannot access saved simulations
+  if (req.user.isGuest) {
+    return res.status(403).json({ message: 'Guest users cannot access saved simulations' });
+  }
+  
   const { simulationId } = req.params;
 
   try {

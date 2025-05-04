@@ -2,6 +2,11 @@ import pool from '../config/db.js';
 
 // Create a new process set
 export const createProcessSet = async (req, res) => {
+  // Check if user is a guest
+  if (req.user.isGuest) {
+    return res.status(403).json({ message: 'Guest users cannot save process sets' });
+  }
+  
   const { name, processes } = req.body;
   const userId = req.user.id;
 
@@ -48,6 +53,11 @@ export const createProcessSet = async (req, res) => {
 
 // Get all process sets for a user
 export const getProcessSets = async (req, res) => {
+  // Check if user is a guest
+  if (req.user.isGuest) {
+    return res.json([]); // Return empty array for guest users
+  }
+  
   try {
     const processSets = await pool.query(
       'SELECT * FROM process_sets WHERE user_id = $1 ORDER BY created_date DESC',
@@ -63,6 +73,11 @@ export const getProcessSets = async (req, res) => {
 
 // Get a specific process set with its processes
 export const getProcessSet = async (req, res) => {
+  // Check if user is a guest
+  if (req.user.isGuest) {
+    return res.status(403).json({ message: 'Guest users cannot access saved process sets' });
+  }
+  
   const { processSetId } = req.params;
 
   try {
@@ -94,6 +109,11 @@ export const getProcessSet = async (req, res) => {
 
 // Update a process set
 export const updateProcessSet = async (req, res) => {
+  // Check if user is a guest
+  if (req.user.isGuest) {
+    return res.status(403).json({ message: 'Guest users cannot update process sets' });
+  }
+  
   const { processSetId } = req.params;
   const { name, processes } = req.body;
 
@@ -151,6 +171,11 @@ export const updateProcessSet = async (req, res) => {
 
 // Delete a process set
 export const deleteProcessSet = async (req, res) => {
+  // Check if user is a guest
+  if (req.user.isGuest) {
+    return res.status(403).json({ message: 'Guest users cannot delete process sets' });
+  }
+  
   const { processSetId } = req.params;
 
   try {

@@ -14,9 +14,16 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
+    const guestMode = localStorage.getItem('guestMode');
+    
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
+    
+    if (guestMode === 'true') {
+      config.headers['X-Guest-Mode'] = 'true';
+    }
+    
     return config;
   },
   (error) => {
@@ -74,4 +81,4 @@ export const simulate = {
   },
 };
 
-export default api; 
+export default api;

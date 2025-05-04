@@ -100,6 +100,15 @@ export const login = async (req, res) => {
 // Get user profile
 export const getProfile = async (req, res) => {
   try {
+    // Handle guest user profile request
+    if (req.user.isGuest) {
+      return res.json({
+        email: 'guest@cpusaas.com',
+        isGuest: true
+      });
+    }
+    
+    // Normal user profile
     const user = await pool.query(
       'SELECT user_id, email, registration_date FROM users WHERE user_id = $1',
       [req.user.id]

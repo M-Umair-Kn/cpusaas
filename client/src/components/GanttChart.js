@@ -399,7 +399,8 @@ const GanttChart = ({ algoName, gantt, metrics /*, onTimeChange*/ }) => {
 
   // Play/Pause handlers
   const togglePlay = useCallback(() => {
-    if (currentTime >= maxTime) {
+    const EPSILON = 0.001;
+    if (Math.abs(currentTime - maxTime) < EPSILON || currentTime > maxTime) {
       // Restart if at the end
       setCurrentTime(0);
       setIsPlaying(true);
@@ -637,7 +638,7 @@ const GanttChart = ({ algoName, gantt, metrics /*, onTimeChange*/ }) => {
       <div className="custom-chart-container">
         <details open>
           <summary>
-            CPU Scheduling Gantt Chart
+          {algoName} - Gantt Chart
           </summary>
 
           <div className="animation-controls">
@@ -793,7 +794,10 @@ const GanttChart = ({ algoName, gantt, metrics /*, onTimeChange*/ }) => {
 
       {/* Process Queues */}
       {/* {renderProcessQueues()} */}
-      <MetricsTable metrics={metrics} />
+      <MetricsTable 
+        metrics={metrics}
+        algoName={algoName}
+        />
     </div>
   );
 };

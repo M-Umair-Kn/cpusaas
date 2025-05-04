@@ -115,6 +115,12 @@ const ProcessForm = ({ processes, setProcesses, showPriority = false }) => {
       setError('Process ID is required');
       return false;
     }
+    
+    // Add duplicate check here
+    if (processes.some(p => p.pid === data.pid)) {
+      setError('Process ID already exists');
+      return false;
+    }
 
     if (data.arrival_time < 0) {
       setError('Arrival time cannot be negative');
@@ -137,12 +143,6 @@ const ProcessForm = ({ processes, setProcesses, showPriority = false }) => {
   const handleAddProcess = () => {
     if (!validateProcess(newProcess)) return;
 
-    // Check if process ID already exists
-    if (processes.some(p => p.pid === newProcess.pid)) {
-      setError('Process ID already exists');
-      return;
-    }
-
     // Add process to list
     setProcesses([...processes, newProcess]);
 
@@ -151,9 +151,9 @@ const ProcessForm = ({ processes, setProcesses, showPriority = false }) => {
   };
 
   const removeProcess = (index) => {
-    const updatedProcesses = [...processesInEdit];
-    updatedProcesses.splice(index, 1);
-    setProcessesInEdit(updatedProcesses);
+    setProcessesInEdit(prevProcesses => 
+      prevProcesses.filter((_, idx) => idx !== index)
+    );
   };
 
   const toggleEditMode = () => {

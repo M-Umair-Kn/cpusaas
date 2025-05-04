@@ -47,6 +47,8 @@ const calculateMetrics = (gantt, processes) => {
   let totalTurnaroundTime = 0;
   let totalResponseTime = 0;
   const pids = Object.keys(metrics.processMetrics);
+  const completedPids = pids.filter(pid => metrics.processMetrics[pid].turnaroundTime > 0);
+  const numCompleted = completedPids.length || 1; // Avoid division by zero
   
   pids.forEach(pid => {
     totalWaitingTime += metrics.processMetrics[pid].waitingTime;
@@ -54,9 +56,9 @@ const calculateMetrics = (gantt, processes) => {
     totalResponseTime += metrics.processMetrics[pid].responseTime;
   });
 
-  metrics.averageWaitingTime = totalWaitingTime / pids.length;
-  metrics.averageTurnaroundTime = totalTurnaroundTime / pids.length;
-  metrics.averageResponseTime = totalResponseTime / pids.length;
+  metrics.averageWaitingTime = totalWaitingTime / numCompleted;
+  metrics.averageTurnaroundTime = totalTurnaroundTime / numCompleted;
+  metrics.averageResponseTime = totalResponseTime / numCompleted;
 
   // Calculate CPU Utilization
   if (gantt.length > 0) {
@@ -118,8 +120,12 @@ const sjfNonPreemptive = (processes) => {
     
     if (readyProcesses.length === 0) {
       // No processes are ready, move time forward to the next arrival
-      const nextArrival = Math.min(...remainingProcesses.map(p => p.arrival_time));
-      currentTime = nextArrival;
+      if (remainingProcesses.length === 0) {
+        break; // Exit the loop if no processes remain
+      } else {
+        const nextArrival = Math.min(...remainingProcesses.map(p => p.arrival_time));
+        currentTime = nextArrival;
+      }
       continue;
     }
     
@@ -163,8 +169,12 @@ const srtf = (processes) => {
     
     if (readyProcesses.length === 0) {
       // No processes are ready, move time forward to the next arrival
-      const nextArrival = Math.min(...remainingProcesses.map(p => p.arrival_time));
-      currentTime = nextArrival;
+      if (remainingProcesses.length === 0) {
+        break; // Exit the loop if no processes remain
+      } else {
+        const nextArrival = Math.min(...remainingProcesses.map(p => p.arrival_time));
+        currentTime = nextArrival;
+      }
       continue;
     }
     
@@ -250,14 +260,20 @@ const priorityNonPreemptive = (processes) => {
     
     if (readyProcesses.length === 0) {
       // No processes are ready, move time forward to the next arrival
-      const nextArrival = Math.min(...remainingProcesses.map(p => p.arrival_time));
-      currentTime = nextArrival;
+      if (remainingProcesses.length === 0) {
+        break; // Exit the loop if no processes remain
+      } else {
+        const nextArrival = Math.min(...remainingProcesses.map(p => p.arrival_time));
+        currentTime = nextArrival;
+      }
       continue;
     }
     
     // Find the process with the highest priority (lower number = higher priority)
     const highestPriorityJob = readyProcesses.reduce(
-      (min, p) => (p.priority < min.priority) ? p : min,
+      (min, p) => (p.priority < min.priority || 
+                  (p.priority === min.priority && p.arrival_time < min.arrival_time)) 
+                  ? p : min,
       readyProcesses[0]
     );
     
@@ -295,14 +311,20 @@ const priorityPreemptive = (processes) => {
     
     if (readyProcesses.length === 0) {
       // No processes are ready, move time forward to the next arrival
-      const nextArrival = Math.min(...remainingProcesses.map(p => p.arrival_time));
-      currentTime = nextArrival;
+      if (remainingProcesses.length === 0) {
+        break; // Exit the loop if no processes remain
+      } else {
+        const nextArrival = Math.min(...remainingProcesses.map(p => p.arrival_time));
+        currentTime = nextArrival;
+      }
       continue;
     }
     
     // Find the process with the highest priority (lower number = higher priority)
     const highestPriorityJob = readyProcesses.reduce(
-      (min, p) => (p.priority < min.priority) ? p : min,
+      (min, p) => (p.priority < min.priority || 
+                  (p.priority === min.priority && p.arrival_time < min.arrival_time)) 
+                  ? p : min,
       readyProcesses[0]
     );
     
@@ -467,10 +489,20 @@ export const runSimulation = async (req, res) => {
 
     // Store simulation results if processSetId is provided
     if (processSetId) {
-      await pool.query(
-        'INSERT INTO simulations (user_id, process_set_id, algorithm, gantt_data, metrics) VALUES ($1, $2, $3, $4, $5)',
-        [userId, processSetId, algorithm, JSON.stringify(result.gantt), JSON.stringify(result.metrics)]
-      );
+      const client = await pool.connect();
+      try {
+        await client.query('BEGIN');
+        await client.query(
+          'INSERT INTO simulations (user_id, process_set_id, algorithm, gantt_data, metrics) VALUES ($1, $2, $3, $4, $5)',
+          [userId, processSetId, algorithm, JSON.stringify(result.gantt), JSON.stringify(result.metrics)]
+        );
+        await client.query('COMMIT');
+      } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+      } finally {
+        client.release();
+      }
     }
     res.json(result);
   } catch (err) {

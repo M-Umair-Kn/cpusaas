@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MetricsTable = ({ metrics }) => {
+const MetricsTable = ({ metrics, algoName }) => {
   if (!metrics) {
     return <p>No metrics available</p>;
   }
@@ -8,7 +8,7 @@ const MetricsTable = ({ metrics }) => {
   return (
     <div className="metrics-container">
       <details>
-      <summary>Performance Metrics</summary>
+      <summary>{algoName} - Performance Metrics</summary>
       
       <div className="metrics-summary">
         <div className="metric-card">

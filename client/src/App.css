@@ -414,7 +414,14 @@ body {
   }
 }
 
-.process-panel,
+.process-panel{
+  /* margin: 20px 0; */
+  padding: 20px;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  box-shadow: 0 0 10px var(--shadow-color);
+}
+
 .results-panel{
   /* margin: 20px 0; */
   padding: 20px;
@@ -681,8 +688,8 @@ body {
 .gantt-chart-container {
   background-color: var(--bg-secondary);
   border-radius: 8px;
-  /* padding: 20px; */
-  /* box-shadow: 0 4px 8px var(--shadow-color); */
+  padding: 1px 5px;
+  box-shadow: 0 4px 8px var(--shadow-color);
   /* margin-bottom: 20px; */
 }
 
@@ -696,7 +703,17 @@ body {
   border-bottom: 1px solid var(--border-color);
 }
 
-.custom-chart-container,
+.custom-chart-container{
+  margin: 20px 0;
+  padding: 10px;
+  background-color: var(--chart-bg);
+  border-radius: 8px;
+  box-shadow: 0 2px 5px var(--shadow-color);
+  overflow-x: auto;
+  position: relative;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
 .metrics-container {
   margin: 20px 0;
   padding: 10px;

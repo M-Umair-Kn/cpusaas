@@ -46,9 +46,11 @@ const dropDb = spawn('dropdb', [
 ]);
 
 dropDb.on('close', (code) => {
-    if (code !== 0 && code !== 1) { // code 1 means database didn't exist
+    if (code !== 0 && code !== 1) {
         console.error(`Failed to drop database with code ${code}`);
-        process.exit(1);
+        // Perform any necessary cleanup
+        process.exitCode = 1; // Set exit code but allow normal termination
+        return; // Exit function instead of process
     }
 
     const createDb = spawn('createdb', [

@@ -7,11 +7,21 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isGuest, setIsGuest] = useState(false);
 
   // Load user on initial render
   useEffect(() => {
     const loadUser = async () => {
       try {
+        // Check if user is logged in as guest
+        const guestMode = localStorage.getItem('guestMode');
+        if (guestMode === 'true') {
+          setUser({ username: 'Guest', email: 'guest@cpusaas.com', isGuest: true });
+          setIsGuest(true);
+          setLoading(false);
+          return;
+        }
+
         const token = localStorage.getItem('token');
         if (!token) {
           setLoading(false);
@@ -32,9 +42,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Register user
-  const register = async (email, password) => {
+  const register = async (username, email, password) => {
     try {
-      const response = await auth.register(email, password);
+      const response = await auth.register(username, email, password);
       localStorage.setItem('token', response.data.token);
       loadUserProfile();
       return response;
@@ -49,12 +59,20 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await auth.login(email, password);
       localStorage.setItem('token', response.data.token);
-      loadUserProfile();
+      await loadUserProfile();
       return response;
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
       throw err;
     }
+  };
+
+  // Guest login
+  const loginAsGuest = () => {
+    localStorage.setItem('guestMode', 'true');
+    setUser({ username: 'Guest', email: 'guest@cpusaas.com', isGuest: true });
+    setIsGuest(true);
+    return { success: true };
   };
 
   // Load user profile
@@ -73,7 +91,9 @@ export const AuthProvider = ({ children }) => {
   // Logout user
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('guestMode');
     setUser(null);
+    setIsGuest(false);
   };
 
   // Clear error
@@ -91,9 +111,11 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         clearError,
+        loginAsGuest,
+        isGuest
       }}
     >
       {children}
     </AuthContext.Provider>
   );
-}; 
+};

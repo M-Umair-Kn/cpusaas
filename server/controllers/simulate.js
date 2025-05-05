@@ -6,6 +6,8 @@ const calculateMetrics = (gantt, processes) => {
     averageWaitingTime: 0,
     averageTurnaroundTime: 0,
     averageResponseTime: 0,
+    cpuUtilization: 0,
+    throughput: 0,
     processMetrics: {}
   };
 
@@ -45,6 +47,8 @@ const calculateMetrics = (gantt, processes) => {
   let totalTurnaroundTime = 0;
   let totalResponseTime = 0;
   const pids = Object.keys(metrics.processMetrics);
+  const completedPids = pids.filter(pid => metrics.processMetrics[pid].turnaroundTime > 0);
+  const numCompleted = completedPids.length || 1; // Avoid division by zero
   
   pids.forEach(pid => {
     totalWaitingTime += metrics.processMetrics[pid].waitingTime;
@@ -52,9 +56,23 @@ const calculateMetrics = (gantt, processes) => {
     totalResponseTime += metrics.processMetrics[pid].responseTime;
   });
 
-  metrics.averageWaitingTime = totalWaitingTime / pids.length;
-  metrics.averageTurnaroundTime = totalTurnaroundTime / pids.length;
-  metrics.averageResponseTime = totalResponseTime / pids.length;
+  metrics.averageWaitingTime = totalWaitingTime / numCompleted;
+  metrics.averageTurnaroundTime = totalTurnaroundTime / numCompleted;
+  metrics.averageResponseTime = totalResponseTime / numCompleted;
+
+  // Calculate CPU Utilization
+  if (gantt.length > 0) {
+    // Total time from start to finish
+    const totalSimulationTime = gantt[gantt.length - 1].end - Math.min(...processes.map(p => p.arrival_time));
+    
+    // Total time CPU was busy (sum of all gantt chart segments)
+    const totalBusyTime = gantt.reduce((sum, segment) => sum + (segment.end - segment.start), 0);
+    
+    metrics.cpuUtilization = (totalBusyTime / totalSimulationTime) * 100;
+    
+    // Calculate throughput (processes per unit time)
+    metrics.throughput = processes.length / totalSimulationTime;
+  }
 
   return metrics;
 };
@@ -65,6 +83,7 @@ const fcfs = (processes) => {
   const sortedProcesses = [...processes].sort((a, b) => a.arrival_time - b.arrival_time);
   
   let currentTime = 0;
+  const algoName = "First Come First Serve";
   const gantt = [];
   
   sortedProcesses.forEach(process => {
@@ -84,7 +103,7 @@ const fcfs = (processes) => {
     currentTime += process.burst_time;
   });
   
-  return { gantt, metrics: calculateMetrics(gantt, processes) };
+  return { algoName, gantt, metrics: calculateMetrics(gantt, processes) };
 };
 
 // Shortest Job First (SJF) Non-Preemptive algorithm
@@ -92,6 +111,7 @@ const sjfNonPreemptive = (processes) => {
   const remainingProcesses = [...processes].map(p => ({ ...p, remaining: p.burst_time }));
   
   let currentTime = 0;
+  const algoName = "Shortest Job First";
   const gantt = [];
   
   while (remainingProcesses.length > 0) {
@@ -100,8 +120,12 @@ const sjfNonPreemptive = (processes) => {
     
     if (readyProcesses.length === 0) {
       // No processes are ready, move time forward to the next arrival
-      const nextArrival = Math.min(...remainingProcesses.map(p => p.arrival_time));
-      currentTime = nextArrival;
+      if (remainingProcesses.length === 0) {
+        break; // Exit the loop if no processes remain
+      } else {
+        const nextArrival = Math.min(...remainingProcesses.map(p => p.arrival_time));
+        currentTime = nextArrival;
+      }
       continue;
     }
     
@@ -126,49 +150,7 @@ const sjfNonPreemptive = (processes) => {
     remainingProcesses.splice(index, 1);
   }
   
-  return { gantt, metrics: calculateMetrics(gantt, processes) };
-};
-
-// Priority Scheduling (Non-Preemptive) algorithm
-const priorityNonPreemptive = (processes) => {
-  const remainingProcesses = [...processes].map(p => ({ ...p, remaining: p.burst_time }));
-  
-  let currentTime = 0;
-  const gantt = [];
-  
-  while (remainingProcesses.length > 0) {
-    // Find ready processes
-    const readyProcesses = remainingProcesses.filter(p => p.arrival_time <= currentTime);
-    
-    if (readyProcesses.length === 0) {
-      // No processes are ready, move time forward to the next arrival
-      const nextArrival = Math.min(...remainingProcesses.map(p => p.arrival_time));
-      currentTime = nextArrival;
-      continue;
-    }
-    
-    // Find the process with the highest priority (lower number = higher priority)
-    const highestPriorityJob = readyProcesses.reduce(
-      (min, p) => (p.priority < min.priority) ? p : min,
-      readyProcesses[0]
-    );
-    
-    // Add process to Gantt chart
-    gantt.push({
-      pid: highestPriorityJob.pid,
-      start: currentTime,
-      end: currentTime + highestPriorityJob.burst_time
-    });
-    
-    // Move time forward
-    currentTime += highestPriorityJob.burst_time;
-    
-    // Remove the processed job
-    const index = remainingProcesses.findIndex(p => p.pid === highestPriorityJob.pid);
-    remainingProcesses.splice(index, 1);
-  }
-  
-  return { gantt, metrics: calculateMetrics(gantt, processes) };
+  return {algoName, gantt, metrics: calculateMetrics(gantt, processes) };
 };
 
 // Shortest Remaining Time First (SRTF) Preemptive algorithm
@@ -176,6 +158,7 @@ const srtf = (processes) => {
   const remainingProcesses = [...processes].map(p => ({ ...p, remaining: p.burst_time }));
   
   let currentTime = 0;
+  const algoName = "Shortest Remaining Time First";
   const gantt = [];
   let lastRunningPid = null;
   let lastStartTime = 0;
@@ -186,8 +169,12 @@ const srtf = (processes) => {
     
     if (readyProcesses.length === 0) {
       // No processes are ready, move time forward to the next arrival
-      const nextArrival = Math.min(...remainingProcesses.map(p => p.arrival_time));
-      currentTime = nextArrival;
+      if (remainingProcesses.length === 0) {
+        break; // Exit the loop if no processes remain
+      } else {
+        const nextArrival = Math.min(...remainingProcesses.map(p => p.arrival_time));
+        currentTime = nextArrival;
+      }
       continue;
     }
     
@@ -256,7 +243,151 @@ const srtf = (processes) => {
     }
   }
   
-  return { gantt: mergedGantt, metrics: calculateMetrics(mergedGantt, processes) };
+  return { algoName, gantt: mergedGantt, metrics: calculateMetrics(mergedGantt, processes) };
+};
+
+// Priority Scheduling (Non-Preemptive) algorithm
+const priorityNonPreemptive = (processes) => {
+  const remainingProcesses = [...processes].map(p => ({ ...p, remaining: p.burst_time }));
+  
+  let currentTime = 0;
+  const algoName = "Priority";
+  const gantt = [];
+  
+  while (remainingProcesses.length > 0) {
+    // Find ready processes
+    const readyProcesses = remainingProcesses.filter(p => p.arrival_time <= currentTime);
+    
+    if (readyProcesses.length === 0) {
+      // No processes are ready, move time forward to the next arrival
+      if (remainingProcesses.length === 0) {
+        break; // Exit the loop if no processes remain
+      } else {
+        const nextArrival = Math.min(...remainingProcesses.map(p => p.arrival_time));
+        currentTime = nextArrival;
+      }
+      continue;
+    }
+    
+    // Find the process with the highest priority (lower number = higher priority)
+    const highestPriorityJob = readyProcesses.reduce(
+      (min, p) => (p.priority < min.priority || 
+                  (p.priority === min.priority && p.arrival_time < min.arrival_time)) 
+                  ? p : min,
+      readyProcesses[0]
+    );
+    
+    // Add process to Gantt chart
+    gantt.push({
+      pid: highestPriorityJob.pid,
+      start: currentTime,
+      end: currentTime + highestPriorityJob.burst_time
+    });
+    
+    // Move time forward
+    currentTime += highestPriorityJob.burst_time;
+    
+    // Remove the processed job
+    const index = remainingProcesses.findIndex(p => p.pid === highestPriorityJob.pid);
+    remainingProcesses.splice(index, 1);
+  }
+  
+  return { algoName, gantt, metrics: calculateMetrics(gantt, processes) };
+};
+
+// Priority Scheduling (Preemptive) algorithm
+const priorityPreemptive = (processes) => {
+  const remainingProcesses = [...processes].map(p => ({ ...p, remaining: p.burst_time }));
+  
+  let currentTime = 0;
+  const algoName = "Priority (Preemptive)";
+  const gantt = [];
+  let lastRunningPid = null;
+  let lastStartTime = 0;
+  
+  while (remainingProcesses.length > 0) {
+    // Find ready processes
+    const readyProcesses = remainingProcesses.filter(p => p.arrival_time <= currentTime);
+    
+    if (readyProcesses.length === 0) {
+      // No processes are ready, move time forward to the next arrival
+      if (remainingProcesses.length === 0) {
+        break; // Exit the loop if no processes remain
+      } else {
+        const nextArrival = Math.min(...remainingProcesses.map(p => p.arrival_time));
+        currentTime = nextArrival;
+      }
+      continue;
+    }
+    
+    // Find the process with the highest priority (lower number = higher priority)
+    const highestPriorityJob = readyProcesses.reduce(
+      (min, p) => (p.priority < min.priority || 
+                  (p.priority === min.priority && p.arrival_time < min.arrival_time)) 
+                  ? p : min,
+      readyProcesses[0]
+    );
+    
+    // If the running process changes, add the previous one to the Gantt chart
+    if (lastRunningPid !== null && lastRunningPid !== highestPriorityJob.pid) {
+      gantt.push({
+        pid: lastRunningPid,
+        start: lastStartTime,
+        end: currentTime
+      });
+      lastStartTime = currentTime;
+    } else if (lastRunningPid === null) {
+      lastStartTime = currentTime;
+    }
+    
+    // Update the running process
+    lastRunningPid = highestPriorityJob.pid;
+    
+    // Determine how long this process will run
+    const timeSlice = 1; // Run for 1 time unit and then reevaluate
+    
+    // Check if any new process arrives during this time slice
+    const nextArrival = remainingProcesses
+      .filter(p => p.arrival_time > currentTime)
+      .reduce((min, p) => p.arrival_time < min ? p.arrival_time : min, currentTime + timeSlice);
+    
+    const runTime = Math.min(timeSlice, nextArrival - currentTime, highestPriorityJob.remaining);
+    
+    // Update remaining time for the running process
+    const runningProcessIndex = remainingProcesses.findIndex(p => p.pid === highestPriorityJob.pid);
+    remainingProcesses[runningProcessIndex].remaining -= runTime;
+    
+    // Move time forward
+    currentTime += runTime;
+    
+    // If the process is complete, remove it
+    if (remainingProcesses[runningProcessIndex].remaining <= 0) {
+      // Add the final segment to the Gantt chart
+      gantt.push({
+        pid: lastRunningPid,
+        start: lastStartTime,
+        end: currentTime
+      });
+      
+      // Reset tracking variables
+      lastRunningPid = null;
+      
+      // Remove the completed process
+      remainingProcesses.splice(runningProcessIndex, 1);
+    }
+  }
+  
+  // Merge adjacent Gantt entries for the same process
+  const mergedGantt = [];
+  for (let i = 0; i < gantt.length; i++) {
+    if (i === 0 || gantt[i].pid !== gantt[i-1].pid) {
+      mergedGantt.push({ ...gantt[i] });
+    } else {
+      mergedGantt[mergedGantt.length - 1].end = gantt[i].end;
+    }
+  }
+  
+  return { algoName, gantt: mergedGantt, metrics: calculateMetrics(mergedGantt, processes) };
 };
 
 // Round Robin (RR) algorithm
@@ -264,6 +395,7 @@ const roundRobin = (processes, timeQuantum = 1) => {
   const remainingProcesses = [...processes].map(p => ({ ...p, remaining: p.burst_time }));
   
   let currentTime = 0;
+  const algoName = "Round Robin";
   const gantt = [];
   const readyQueue = [];
   
@@ -320,13 +452,12 @@ const roundRobin = (processes, timeQuantum = 1) => {
     }
   }
   
-  return { gantt, metrics: calculateMetrics(gantt, processes) };
+  return { algoName, gantt, metrics: calculateMetrics(gantt, processes) };
 };
 
 // Run simulation
 export const runSimulation = async (req, res) => {
   const { algorithm, processes, processSetId, timeQuantum } = req.body;
-  const userId = req.user.id;
 
   try {
     let result;
@@ -342,30 +473,37 @@ export const runSimulation = async (req, res) => {
       case 'SRTF':
         result = srtf(processes);
         break;
-      case 'RR':
-        result = roundRobin(processes, timeQuantum || 1);
-        break;
       case 'Priority':
         result = priorityNonPreemptive(processes);
         break;
-      case 'SJF (Non-Preemptive)': // For backward compatibility
-        result = sjfNonPreemptive(processes);
+      case 'Priority (Preemptive)':
+        result = priorityPreemptive(processes);
         break;
-      case 'Priority (Non-Preemptive)': // For backward compatibility
-        result = priorityNonPreemptive(processes);
+      case 'RR':
+        result = roundRobin(processes, timeQuantum || 1);
         break;
       default:
         return res.status(400).json({ message: 'Algorithm not supported' });
     }
 
-    // Store simulation results if processSetId is provided
-    if (processSetId) {
-      await pool.query(
-        'INSERT INTO simulations (user_id, process_set_id, algorithm, gantt_data, metrics) VALUES ($1, $2, $3, $4, $5)',
-        [userId, processSetId, algorithm, JSON.stringify(result.gantt), JSON.stringify(result.metrics)]
-      );
+    // Store simulation results if processSetId is provided and user is not a guest
+    if (processSetId && !req.user.isGuest) {
+      const userId = req.user.id;
+      const client = await pool.connect();
+      try {
+        await client.query('BEGIN');
+        await client.query(
+          'INSERT INTO simulations (user_id, process_set_id, algorithm, gantt_data, metrics) VALUES ($1, $2, $3, $4, $5)',
+          [userId, processSetId, algorithm, JSON.stringify(result.gantt), JSON.stringify(result.metrics)]
+        );
+        await client.query('COMMIT');
+      } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+      } finally {
+        client.release();
+      }
     }
-
     res.json(result);
   } catch (err) {
     console.error(err.message);
@@ -375,6 +513,11 @@ export const runSimulation = async (req, res) => {
 
 // Get simulations for a user
 export const getSimulations = async (req, res) => {
+  // Return empty array for guest users
+  if (req.user.isGuest) {
+    return res.json([]);
+  }
+  
   try {
     const simulations = await pool.query(
       'SELECT s.*, ps.name as process_set_name FROM simulations s ' +
@@ -392,6 +535,11 @@ export const getSimulations = async (req, res) => {
 
 // Get a specific simulation
 export const getSimulation = async (req, res) => {
+  // Guest users cannot access saved simulations
+  if (req.user.isGuest) {
+    return res.status(403).json({ message: 'Guest users cannot access saved simulations' });
+  }
+  
   const { simulationId } = req.params;
 
   try {

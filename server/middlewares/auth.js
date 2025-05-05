@@ -8,6 +8,15 @@ export default (req, res, next) => {
   // Get token from header
   const token = req.header('Authorization')?.replace('Bearer ', '');
 
+  // Check for guest user header
+  const guestMode = req.header('X-Guest-Mode');
+  
+  // Allow guest mode access with appropriate restrictions
+  if (guestMode === 'true') {
+    req.user = { isGuest: true };
+    return next();
+  }
+
   // Check if no token
   if (!token) {
     return res.status(401).json({ message: 'No token, authorization denied' });

@@ -1,13 +1,14 @@
 import React from 'react';
 
-const MetricsTable = ({ metrics }) => {
+const MetricsTable = ({ metrics, algoName }) => {
   if (!metrics) {
     return <p>No metrics available</p>;
   }
 
   return (
     <div className="metrics-container">
-      <h3>Performance Metrics</h3>
+      <details>
+      <summary>Performance Metrics - {algoName}</summary>
       
       <div className="metrics-summary">
         <div className="metric-card">
@@ -21,6 +22,14 @@ const MetricsTable = ({ metrics }) => {
         <div className="metric-card">
           <h4>Average Response Time</h4>
           <p>{metrics.averageResponseTime.toFixed(2)}</p>
+        </div>
+        <div className="metric-card">
+          <h4>CPU Utilization</h4>
+          <p>{(metrics.cpuUtilization || 0).toFixed(2)}%</p>
+        </div>
+        <div className="metric-card">
+          <h4>Throughput</h4>
+          <p>{(metrics.throughput || 0).toFixed(4)} proc/unit</p>
         </div>
       </div>
 
@@ -45,8 +54,9 @@ const MetricsTable = ({ metrics }) => {
           ))}
         </tbody>
       </table>
+      </details>
     </div>
   );
 };
 
-export default MetricsTable; 
+export default MetricsTable;

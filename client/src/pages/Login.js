@@ -9,7 +9,7 @@ const Login = () => {
     password: '',
   });
   const [formError, setFormError] = useState('');
-  const { login, error, clearError } = useContext(AuthContext);
+  const { login, loginAsGuest, error, clearError } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const { email, password } = formData;
@@ -34,6 +34,11 @@ const Login = () => {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const handleGuestLogin = () => {
+    loginAsGuest();
+    navigate('/dashboard');
   };
 
   return (
@@ -79,6 +84,15 @@ const Login = () => {
           <button type="submit" className="btn btn-primary">
             Login
           </button>
+          
+          <button 
+            type="button" 
+            className="btn btn-secondary guest-btn"
+            onClick={handleGuestLogin}
+            style={{ marginTop: '10px' }}
+          >
+            Continue as Guest
+          </button>
         </form>
 
         <p className="register-link">
@@ -89,4 +103,4 @@ const Login = () => {
   );
 };
 
-export default Login; 
+export default Login;

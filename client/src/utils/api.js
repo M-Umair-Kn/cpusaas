@@ -14,9 +14,16 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
+    const guestMode = localStorage.getItem('guestMode');
+    
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
+    
+    if (guestMode === 'true') {
+      config.headers['X-Guest-Mode'] = 'true';
+    }
+    
     return config;
   },
   (error) => {
@@ -26,8 +33,8 @@ api.interceptors.request.use(
 
 // Authentication API calls
 export const auth = {
-  register: (email, password) => {
-    return api.post('/auth/register', { email, password });
+  register: (username, email, password) => {
+    return api.post('/auth/register', { username, email, password });
   },
   login: (email, password) => {
     return api.post('/auth/login', { email, password });
@@ -58,12 +65,12 @@ export const processApi = {
 
 // Simulation API calls
 export const simulate = {
-  runSimulation: (algorithm, processes, processSetId = null, additionalParams = {}) => {
+  runSimulation: (algorithm, processes, processSetId = null, timeQuantum = null) => {
     return api.post('/simulate/run', { 
       algorithm, 
       processes, 
       processSetId,
-      ...additionalParams
+      timeQuantum
     });
   },
   getSimulations: () => {
@@ -74,4 +81,4 @@ export const simulate = {
   },
 };
 
-export default api; 
+export default api;

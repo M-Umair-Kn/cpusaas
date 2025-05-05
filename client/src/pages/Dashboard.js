@@ -256,7 +256,7 @@ const Dashboard = () => {
         <h1>CPU Scheduling Algorithms Simulator</h1>
         <div className="user-controls">
           <ThemeToggle />
-          <p>Welcome, {user?.email}</p>
+          <p>Welcome, {user?.username || 'Guest'}</p>
           <button
             className="btn btn-secondary logout-btn"
             onClick={logout}

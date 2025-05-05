@@ -5,6 +5,7 @@ import ThemeToggle from '../components/ThemeToggle';
 
 const Register = () => {
   const [formData, setFormData] = useState({
+    username: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -13,7 +14,7 @@ const Register = () => {
   const { register, loginAsGuest, error, clearError } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const { email, password, confirmPassword } = formData;
+  const { username, email, password, confirmPassword } = formData;
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,7 +25,7 @@ const Register = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email || !password || !confirmPassword) {
+    if (!username || !email || !password || !confirmPassword) {
       setFormError('Please fill in all fields');
       return;
     }
@@ -39,8 +40,13 @@ const Register = () => {
       return;
     }
 
+    if (username.length < 3) {
+      setFormError('Username must be at least 3 characters');
+      return;
+    }
+
     try {
-      await register(email, password);
+      await register(username, email, password);
       navigate('/dashboard');
     } catch (err) {
       console.error(err);
@@ -66,6 +72,19 @@ const Register = () => {
         )}
 
         <form onSubmit={onSubmit}>
+          <div className="form-group">
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={username}
+              onChange={onChange}
+              placeholder="Choose a username"
+              required
+            />
+          </div>
+
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input

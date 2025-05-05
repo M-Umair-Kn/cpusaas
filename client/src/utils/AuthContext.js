@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
         // Check if user is logged in as guest
         const guestMode = localStorage.getItem('guestMode');
         if (guestMode === 'true') {
-          setUser({ email: 'guest@cpusaas.com', isGuest: true });
+          setUser({ username: 'Guest', email: 'guest@cpusaas.com', isGuest: true });
           setIsGuest(true);
           setLoading(false);
           return;
@@ -42,9 +42,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Register user
-  const register = async (email, password) => {
+  const register = async (username, email, password) => {
     try {
-      const response = await auth.register(email, password);
+      const response = await auth.register(username, email, password);
       localStorage.setItem('token', response.data.token);
       loadUserProfile();
       return response;
@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }) => {
   // Guest login
   const loginAsGuest = () => {
     localStorage.setItem('guestMode', 'true');
-    setUser({ email: 'guest@cpusaas.com', isGuest: true });
+    setUser({ username: 'Guest', email: 'guest@cpusaas.com', isGuest: true });
     setIsGuest(true);
     return { success: true };
   };
